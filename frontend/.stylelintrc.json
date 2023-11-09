@@ -1,0 +1,44 @@
+{
+  "extends": ["stylelint-config-recommended-scss", "stylelint-config-standard", "stylelint-config-recess-order"],
+  "rules": {
+    "rule-empty-line-before": [
+      "always",
+      {
+        "except": ["first-nested"],
+        "ignore": ["after-comment"]
+      }
+    ],
+    "selector-class-pattern": [
+      "^(?!.*\\.\\.)(?!.*___)(?!.*\\.$)[0-9a-zA-Z_.-]{0,60}$",
+      {
+        "message": "Unavailable selector name"
+      }
+    ],
+    "at-rule-no-unknown": null,
+    "no-descending-specificity": null,
+    "block-opening-brace-space-before": "always",
+    "declaration-block-no-redundant-longhand-properties": null,
+    "function-no-unknown": null,
+    "selector-pseudo-class-no-unknown": [
+      true,
+      {
+        "ignorePseudoClasses": ["deep"]
+      }
+    ],
+    "value-keyword-case": [
+      "lower",
+      {
+        "ignoreFunctions": ["v-bind"]
+      }
+    ]
+  },
+  "overrides": [
+    {
+      "files": ["./**/*.vue"],
+      "customSyntax": "postcss-html",
+      "rules": {
+        "indentation": 2
+      }
+    }
+  ]
+}

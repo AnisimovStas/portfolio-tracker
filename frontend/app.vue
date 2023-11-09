@@ -1,5 +1,3 @@
 <template>
-  <div>
-    this working perfectly
-  </div>
+  <div>Проверка текста 123</div>
 </template>
