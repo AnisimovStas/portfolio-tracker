@@ -1,4 +1,10 @@
-import { Controller, Get, HttpException, HttpStatus } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  HttpException,
+  HttpStatus,
+  Param,
+} from '@nestjs/common';
 import axios from 'axios';
 import { CurrenciesService } from './currencies.service';
 
@@ -6,9 +12,9 @@ import { CurrenciesService } from './currencies.service';
 export class CurrenciesController {
   constructor(private readonly currenciesService: CurrenciesService) {}
 
-  @Get('crypto')
-  async getCryptoCoins(): Promise<any> {
-    const coins = await this.getCoinsFromCoinGecko(4);
+  @Get('crypto/download-icons/:page')
+  async getCryptoCoins(@Param('page') page: number): Promise<any> {
+    const coins = await this.getCoinsFromCoinGecko(page);
 
     await this.currenciesService.downloadCryptoIconImages(coins.data);
   }
