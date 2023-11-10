@@ -1,19 +1,19 @@
 version: '3'
 services:
-  main:
-    container_name: main
-    build:
-      context: .
-    volumes:
-      - .:/usr/src/app
-      - /usr/src/app/node_modules
-    ports:
-      - "9229:9229"
-    command: npm run start:dev
-    env_file:
-      - .env
-    depends_on:
-      - postgres
+#  main:
+#    container_name: main
+#    build:
+#      context: .
+#    volumes:
+#      - .:/usr/src/app
+#      - /usr/src/app/node_modules
+#    ports:
+#      - "9229:9229"
+#    command: npm run start:dev
+#    env_file:
+#      - .env
+#    depends_on:
+#      - postgres
 
   postgres:
     image: postgres:latest
