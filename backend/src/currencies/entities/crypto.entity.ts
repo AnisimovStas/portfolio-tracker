@@ -1,9 +1,17 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 
 @Entity()
 export class Crypto {
   @PrimaryGeneratedColumn()
   id: number;
+
+  @Column()
+  coinGeckoId: string;
 
   @Column()
   name: string;
@@ -15,5 +23,8 @@ export class Crypto {
   icon: string;
 
   @Column()
-  currentPrice: number;
+  currentPrice: string;
+
+  @UpdateDateColumn()
+  updatedAt: Date;
 }

@@ -7,6 +7,8 @@ import { PortfoliosModule } from './portfolios/portfolios.module';
 import { CurrenciesModule } from './currencies/currencies.module';
 import { TransactionsModule } from './transactions/transactions.module';
 import { ImageService } from './image/image.service';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import { join } from 'path';
 
 @Module({
   imports: [
@@ -24,6 +26,10 @@ import { ImageService } from './image/image.service';
     PortfoliosModule,
     CurrenciesModule,
     TransactionsModule,
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname, '..', 'src', 'assets', 'crypto'),
+      serveRoot: '/assets',
+    }),
   ],
   controllers: [AppController],
   providers: [AppService, ImageService],
