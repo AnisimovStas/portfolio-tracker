@@ -23,6 +23,7 @@ export class CurrenciesController {
   async writeCryptoInDataBase(@Param('page') page: number): Promise<any> {
     return this.currenciesService.writeCryptoInDataBase(page);
   }
+
   private async getCoinsFromCoinGecko(page = 1): Promise<any> {
     const url = `https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&per_page=250&page=${page}`;
 
@@ -36,5 +37,10 @@ export class CurrenciesController {
     return {
       data: response.data,
     };
+  }
+
+  @Get('crypto/update-prices')
+  async updateCryptoPrices(): Promise<any> {
+    return this.currenciesService.updateCryptoPrices();
   }
 }

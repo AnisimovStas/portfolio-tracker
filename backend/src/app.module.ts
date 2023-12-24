@@ -9,13 +9,15 @@ import { TransactionsModule } from './transactions/transactions.module';
 import { ImageService } from './image/image.service';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
+import { AuthModule } from './auth/auth.module';
+import { PassportModule } from '@nestjs/passport';
 
 @Module({
   imports: [
     TypeOrmModule.forRoot({
       type: 'postgres',
       host: '127.0.0.1',
-      port: 5432,
+      port: 5433,
       username: 'postgres',
       password: 'postgres',
       database: 'postgres',
@@ -25,11 +27,13 @@ import { join } from 'path';
     UsersModule,
     PortfoliosModule,
     CurrenciesModule,
+    PassportModule.register({ session: true }),
     TransactionsModule,
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '..', 'src', 'assets', 'crypto'),
       serveRoot: '/assets',
     }),
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService, ImageService],

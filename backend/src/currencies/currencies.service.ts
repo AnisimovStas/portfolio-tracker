@@ -27,9 +27,8 @@ export class CurrenciesService {
     }
   }
 
-  async writeCryptoInDataBase(page = 1): Promise<any> {
+  async fetchCryptoCoins(page = 1): Promise<any> {
     const url = `https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&per_page=250&page=${page}`;
-
     const { data } = await firstValueFrom(
       this.httpService.get(url).pipe(
         catchError((error: AxiosError) => {
@@ -38,6 +37,11 @@ export class CurrenciesService {
         }),
       ),
     );
+    return data;
+  }
+
+  async writeCryptoInDataBase(page = 1): Promise<any> {
+    const data = await this.fetchCryptoCoins(page);
 
     const cryptos = data.map((crypto) => {
       return {
@@ -50,5 +54,23 @@ export class CurrenciesService {
     });
 
     return this.cryptoRepository.save(cryptos);
+  }
+
+  async updateCryptoPrices() {
+    const gigaCryptoArray = [];
+
+    for (let page = 1; page <= 4; page++) {
+      const data = await this.fetchCryptoCoins(page);
+      console.log(page);
+      gigaCryptoArray.push(...data);
+    }
+
+    const updatedCryptos = gigaCryptoArray.map((crypto) => {
+      return {
+        coinGeckoId: crypto.id,
+        currentPrice: crypto.current_price,
+      };
+    });
+    return updatedCryptos;
   }
 }
