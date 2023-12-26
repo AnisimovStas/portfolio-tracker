@@ -1,16 +1,32 @@
 <template>
   <div class="container">
-    <h1>Начало</h1>
-    <Icon
-      v-if="!authStore.isAuth"
-      src="SvgoAuthGoogleIcon"
-      @click="
-        navigateTo('http://localhost:9229/api/auth/google/login', {
-          external: true,
-        })
-      "
-    />
-    <button v-else @click="authStore.logout">Выйти из учетной записи</button>
+    <h1>Добро пожаловать в портфолио!</h1>
+    <h1>
+      Lorem ipsum dolor sit amet, consectetur adipisicing elit. Cum dolorem,
+      error, explicabo illum neque nihil perspiciatis quae repellat, sit tenetur
+      totam ut. Aperiam dignissimos eligendi necessitatibus officia perspiciatis
+      quos sunt!
+    </h1>
+    <h1>
+      Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aut consequatur
+      cupiditate debitis delectus dolorem eaque error iusto, libero
+      reprehenderit sint, temporibus vero vitae, voluptate. Accusantium
+      consequatur culpa debitis deserunt, dolorem eum facere mollitia, nisi,
+      numquam pariatur praesentium quam quos recusandae sapiente sint vitae
+      voluptatem! Autem incidunt ipsam magnam pariatur! Ipsa?
+    </h1>
+    <h1>
+      Lorem ipsum dolor sit amet, consectetur adipisicing elit. A at consequatur
+      corporis culpa cumque debitis deserunt dolor doloribus fuga nesciunt
+      nostrum, obcaecati officiis praesentium qui quisquam quod tempora, vel
+      veniam.
+    </h1>
+    <h1>
+      Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ad architecto
+      aspernatur atque beatae debitis esse ex excepturi exercitationem facilis
+      fuga fugit natus obcaecati omnis quod, reiciendis similique sint tempora
+      voluptatem?
+    </h1>
   </div>
 </template>
 <script setup lang="ts">
@@ -30,5 +46,6 @@ onBeforeMount(async () => {
   flex-direction: column;
   align-items: center;
   justify-content: start;
+  height: 100%;
 }
 </style>

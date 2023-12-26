@@ -32,6 +32,7 @@ export const useAuthStore = defineStore("global/auth", () => {
     await $fetch("/api/auth/logout", { method: "DELETE" });
     isAuthCookie.value = null;
     user.value = null;
+    navigateTo("/");
   };
 
   const isAuth = computed(() => {

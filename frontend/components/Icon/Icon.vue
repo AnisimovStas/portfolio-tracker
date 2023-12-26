@@ -1,38 +1,52 @@
 <template>
-  <div id="icon" ref="icon" class="icon-container">
+  <div id="icon" class="icon-container">
     <component :is="src" class="icon" />
   </div>
 </template>
 <script setup lang="ts">
 import type { IIconProps } from "~/components/Icon/Icon.types";
 
-defineProps<IIconProps>();
+const props = defineProps<IIconProps>();
 
-const icon = ref(null);
-
-onBeforeMount(() => {
-  console.log(icon.value);
-  const container = document.getElementById("icon");
-  if (container?.children[0]) {
-    container.children[0].classList.remove("nuxt-icon--fill");
+const iconSize = computed(() => {
+  switch (props.size) {
+    case "xs":
+      return "24px";
+    case "sm":
+      return "32px";
+    case "md":
+      return "48px";
+    case "lg":
+      return "64px";
+    case "xl":
+      return "96px";
   }
 });
+// Убирает черный цвет
+// onBeforeMount(() => {
+//   const container = document.getElementById("icon");
+//   if (container?.children[0]) {
+//     container.children[0].classList.remove("nuxt-icon--fill");
+//   }
+// });
 </script>
 <style scoped>
 .icon-container {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 48px;
-  height: 48px;
+  width: v-bind(iconSize);
+  height: v-bind(iconSize);
   padding: 8px;
   cursor: pointer;
-  border: 1px solid black;
+  background: var(--black);
+  border: 2px solid var(--white);
   border-radius: 50%;
 }
 
 .icon-container:hover {
-  background-color: #ccc;
+  color: var(--black);
+  background: var(--white);
 }
 
 .icon {

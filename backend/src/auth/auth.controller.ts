@@ -2,7 +2,6 @@ import {
   Controller,
   Delete,
   Get,
-  HttpCode,
   HttpException,
   HttpStatus,
   Req,
@@ -11,7 +10,6 @@ import {
 } from '@nestjs/common';
 import { GoogleAuthGuard } from './utils/Guards';
 import { Request, Response } from 'express';
-import { HttpErrorByCode } from '@nestjs/common/utils/http-error-by-code.util';
 
 @Controller('auth')
 export class AuthController {
@@ -25,7 +23,7 @@ export class AuthController {
   @Get('google/redirect')
   handleRedirect(@Req() request: Request, @Res() response: Response) {
     response.cookie('isAuth', true);
-    return response.redirect('http://localhost:3000');
+    return response.redirect('http://localhost:3000/profile');
   }
 
   @Get('status')
