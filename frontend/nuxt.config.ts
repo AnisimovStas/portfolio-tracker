@@ -9,6 +9,14 @@ export default defineNuxtConfig({
     "@nuxtjs/eslint-module",
     "nuxt-viewport",
   ],
+  nitro: {
+    devProxy: {
+      "/api": {
+        changeOrigin: true,
+        target: "http://localhost:9229/api",
+      },
+    },
+  },
   stylelint: {
     fix: true,
   },
