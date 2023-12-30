@@ -31,8 +31,7 @@ export class CurrenciesController {
       method: 'GET',
       url,
     }).catch((error) => {
-      console.log(error);
-      throw new HttpException('Error', HttpStatus.FORBIDDEN);
+      throw new HttpException(`Error: ${error}`, HttpStatus.FORBIDDEN);
     });
     return {
       data: response.data,

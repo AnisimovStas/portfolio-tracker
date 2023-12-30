@@ -6,14 +6,18 @@ export interface IUser {
 
 export const useAuthStore = defineStore("global/auth", () => {
   // const user = ref<IUser | null>(null);
-  const isAuthCookie = useCookie("isAuth");
+  const isAuthCookie = useCookie("authorization");
 
   const {
     data: user,
     pending: isLoading,
     error,
     refresh,
-  } = useFetch<IUser>("/api/auth/getMe");
+  } = useFetch<IUser>("/api/auth/getMe", {
+    headers: {
+      Authorization: `Bearer ${isAuthCookie.value}`,
+    },
+  });
 
   const getMe = async () => {
     await refresh();
@@ -36,7 +40,7 @@ export const useAuthStore = defineStore("global/auth", () => {
   };
 
   const isAuth = computed(() => {
-    const isAuthCookie = useCookie("isAuth");
+    const isAuthCookie = useCookie("authorization");
     return !!isAuthCookie.value;
   });
 

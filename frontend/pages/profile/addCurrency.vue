@@ -20,6 +20,9 @@ const addTransaction = async () => {
   const { data } = await useFetch("/api/transactions/create", {
     baseURL: "http://localhost:9229",
     body: payload,
+    headers: {
+      Authorization: `Bearer ${useCookie("authorization").value}`,
+    },
     method: "POST",
   });
 

@@ -1,13 +1,12 @@
 import { PassportStrategy } from '@nestjs/passport';
-import { Profile, Strategy } from 'passport-google-oauth20';
-import { Inject, Injectable } from '@nestjs/common';
+import { Strategy } from 'passport-google-oauth20';
+import { Injectable } from '@nestjs/common';
 import { AuthService } from '../auth.service';
+import { VerifyCallback } from 'passport-jwt';
 
 @Injectable()
 export class GoogleStrategy extends PassportStrategy(Strategy) {
-  constructor(
-    @Inject('AUTH_SERVICE') private readonly authService: AuthService,
-  ) {
+  constructor(private readonly authService: AuthService) {
     super({
       clientID:
         '525898649995-epsvkq17tdatpjdd504bg8iii8a1rml2.apps.googleusercontent.com',
@@ -17,12 +16,12 @@ export class GoogleStrategy extends PassportStrategy(Strategy) {
     });
   }
 
-  async validate(accessToken: string, refreshToken: string, profile: Profile) {
-    const user = await this.authService.validateUser({
-      email: profile.emails[0].value,
-      displayName: profile.displayName,
-    });
-
-    return user || null;
+  async validate(
+    accessToken: string,
+    refreshToken: string,
+    profile: any,
+    done: VerifyCallback,
+  ) {
+    done(null, profile);
   }
 }

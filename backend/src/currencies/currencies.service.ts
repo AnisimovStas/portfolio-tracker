@@ -35,8 +35,7 @@ export class CurrenciesService {
     const { data } = await firstValueFrom(
       this.httpService.get(url).pipe(
         catchError((error: AxiosError) => {
-          console.log(error.response.data);
-          throw new HttpException('Error', HttpStatus.FORBIDDEN);
+          throw new HttpException(`Error ${error}`, HttpStatus.FORBIDDEN);
         }),
       ),
     );
@@ -64,7 +63,6 @@ export class CurrenciesService {
 
     for (let page = 1; page <= 4; page++) {
       const data = await this.fetchCryptoCoins(page);
-      console.log(page);
       gigaCryptoArray.push(...data);
     }
 

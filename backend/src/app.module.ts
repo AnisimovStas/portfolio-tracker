@@ -10,7 +10,6 @@ import { ImageService } from './image/image.service';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
 import { AuthModule } from './auth/auth.module';
-import { PassportModule } from '@nestjs/passport';
 
 @Module({
   imports: [
@@ -27,7 +26,6 @@ import { PassportModule } from '@nestjs/passport';
     UsersModule,
     PortfoliosModule,
     CurrenciesModule,
-    PassportModule.register({ session: true }),
     TransactionsModule,
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '..', 'src', 'assets', 'crypto'),

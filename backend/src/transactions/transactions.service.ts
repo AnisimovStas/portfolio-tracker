@@ -16,11 +16,10 @@ export class TransactionsService {
     transactionDto: CreateTransactionDto,
     user: User | null,
   ): Promise<Transaction> {
-    console.log(transactionDto);
-    console.log(user);
     if (!user || !user.id) {
       throw new HttpException('User not authenticated', HttpStatus.BAD_REQUEST);
     }
+    console.log(user);
 
     const txWithUser = { ...transactionDto, userId: user.id };
 

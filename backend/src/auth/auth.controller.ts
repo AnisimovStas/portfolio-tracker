@@ -1,34 +1,32 @@
-import {
-  Controller,
-  Delete,
-  Get,
-  HttpException,
-  HttpStatus,
-  Req,
-  Res,
-  UseGuards,
-} from '@nestjs/common';
-import { GoogleAuthGuard } from './utils/Guards';
+import { Controller, Delete, Get, Req, Res, UseGuards } from '@nestjs/common';
 import { Request, Response } from 'express';
+import { AuthService } from './auth.service';
+import { AuthGuard } from '@nestjs/passport';
 
 @Controller('auth')
 export class AuthController {
-  @UseGuards(GoogleAuthGuard)
+  constructor(private readonly authService: AuthService) {}
+
+  public jwtToken = { access_token: '' };
+  @UseGuards(AuthGuard('google'))
   @Get('google/login')
   handleLogin() {
-    return { message: 'Hello World!' };
+    return { message: `Hello World!` };
   }
 
-  @UseGuards(GoogleAuthGuard)
+  @UseGuards(AuthGuard('google'))
   @Get('google/redirect')
-  handleRedirect(@Req() request: Request, @Res() response: Response) {
-    response.cookie('isAuth', true);
+  async handleRedirect(@Req() request: Request, @Res() response: Response) {
+    const jwt = await this.authService.login(request.user);
+
+    this.jwtToken = jwt;
+
+    response.cookie('authorization', jwt.access_token);
     return response.redirect('http://localhost:3000/profile');
   }
 
   @Get('status')
   user(@Req() request: Request) {
-    console.log(request.user);
     if (request.user) {
       return { msg: 'Authenticated' };
     } else {
@@ -36,36 +34,17 @@ export class AuthController {
     }
   }
 
+  @UseGuards(AuthGuard('jwt'))
   @Get('getMe')
   getMe(@Req() request: Request) {
-    if (request.user) {
-      return request.user;
-    } else {
-      throw new HttpException(
-        {
-          msg: ' You are not Authenticated',
-          status: HttpStatus.NOT_ACCEPTABLE,
-        },
-        HttpStatus.NOT_ACCEPTABLE,
-      );
-    }
+    return request.user;
   }
 
   @Delete('logout')
-  logout(@Req() request: Request) {
-    if (!request.user) {
-      throw new HttpException(
-        {
-          msg: 'You are was not Authenticated',
-          status: HttpStatus.NOT_ACCEPTABLE,
-        },
-        HttpStatus.NOT_ACCEPTABLE,
-      );
-    }
+  async logout() {
+    const jwt = await this.authService.login('');
 
-    request.logout({}, () => {
-      msg: 'Logged out';
-    });
+    this.jwtToken = jwt;
 
     return { msg: 'Logged out' };
   }
