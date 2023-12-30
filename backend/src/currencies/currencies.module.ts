@@ -5,9 +5,10 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Crypto } from './entities/crypto.entity';
 import { HttpModule } from '@nestjs/axios';
 import { ImageService } from '../image/image.service';
+import { Fiat } from './entities/fiat.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Crypto]), HttpModule],
+  imports: [TypeOrmModule.forFeature([Crypto, Fiat]), HttpModule],
   providers: [CurrenciesService, ImageService],
   controllers: [CurrenciesController],
 })

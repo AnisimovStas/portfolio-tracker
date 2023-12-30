@@ -4,9 +4,10 @@ import * as path from 'path';
 import { HttpService } from '@nestjs/axios';
 import { catchError, firstValueFrom } from 'rxjs';
 import { AxiosError } from 'axios';
-import { Repository } from 'typeorm';
+import { Like, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Crypto } from './entities/crypto.entity';
+import { Fiat } from './entities/fiat.entity';
 
 @Injectable()
 export class CurrenciesService {
@@ -14,6 +15,8 @@ export class CurrenciesService {
     private readonly imageService: ImageService,
     @InjectRepository(Crypto)
     private readonly cryptoRepository: Repository<Crypto>,
+    @InjectRepository(Fiat)
+    private readonly fiatRepository: Repository<Fiat>,
     private readonly httpService: HttpService,
   ) {}
 
@@ -72,5 +75,75 @@ export class CurrenciesService {
       };
     });
     return updatedCryptos;
+  }
+
+  async setCryptoInterval() {
+    const INTERVAL = 5 * 60 * 1000;
+
+    setInterval(async () => {
+      await this.updateCryptoPrices();
+    }, INTERVAL);
+    return { msg: 'Crypto interval setted' };
+  }
+
+  async getCryptoList() {
+    const cryptos = await this.cryptoRepository.find();
+
+    if (cryptos) {
+      return cryptos;
+    } else {
+      throw new HttpException('There is no crypto', HttpStatus.FORBIDDEN);
+    }
+  }
+
+  async getCryptoListBySearch(search: string) {
+    const cryptos = await this.cryptoRepository.find({
+      where: [{ name: Like(`%${search}%`) }, { ticker: Like(`%${search}%`) }],
+      take: 10,
+    });
+
+    if (cryptos) {
+      return cryptos;
+    } else {
+      return [];
+    }
+  }
+
+  async updateFiatPrices() {
+    const url = 'https://www.cbr-xml-daily.ru/daily_json.js';
+
+    const { data } = await firstValueFrom(this.httpService.get(url));
+
+    if (data?.Valute) {
+      const usdValue = data.Valute.USD.Value;
+      if (usdValue) {
+        const usdInDb = await this.fiatRepository.findOneBy({
+          name: 'USD',
+        });
+        if (usdInDb) {
+          usdInDb.value = usdValue.toFixed(2);
+          await this.fiatRepository.save(usdInDb);
+        }
+        return { msg: `USD updated ${usdValue.toFixed(2)}` };
+      }
+      return { msg: 'there is no USD' };
+    } else {
+      throw new HttpException('Error', HttpStatus.FORBIDDEN);
+    }
+  }
+
+  async getCurrency(currency: string): Promise<any> {
+    const currencyInDb = await this.fiatRepository.findOneBy({
+      name: currency.toUpperCase(),
+    });
+
+    if (currencyInDb) {
+      return { name: currencyInDb.name, value: currencyInDb.value };
+    } else {
+      throw new HttpException(
+        'there is no such currency',
+        HttpStatus.FORBIDDEN,
+      );
+    }
   }
 }

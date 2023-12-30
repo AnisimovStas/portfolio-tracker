@@ -43,4 +43,29 @@ export class CurrenciesController {
   async updateCryptoPrices(): Promise<any> {
     return this.currenciesService.updateCryptoPrices();
   }
+
+  @Get('crypto/setCryptoInterval')
+  async setIntervalForFetchingCryptoPrices() {
+    return this.currenciesService.setCryptoInterval();
+  }
+
+  @Get('fiat/update-prices')
+  async updateFiatPrices(): Promise<any> {
+    return this.currenciesService.updateFiatPrices();
+  }
+
+  @Get('fiat/get/:currency')
+  async getUsd(@Param('currency') currency: string): Promise<any> {
+    return this.currenciesService.getCurrency(currency);
+  }
+
+  @Get('crypto/list')
+  async getCryptoList(): Promise<any> {
+    return this.currenciesService.getCryptoList();
+  }
+
+  @Get('crypto/list/:search')
+  async getCryptoListBySearch(@Param('search') search: string): Promise<any> {
+    return this.currenciesService.getCryptoListBySearch(search);
+  }
 }
