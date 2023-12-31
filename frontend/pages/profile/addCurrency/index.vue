@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="page-container">
     add currency
     <v-btn @click="addTransaction">Add currency</v-btn>
   </div>
@@ -37,3 +37,11 @@ onBeforeMount(async () => {
   }
 });
 </script>
+<style scoped>
+.page-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: start;
+}
+</style>

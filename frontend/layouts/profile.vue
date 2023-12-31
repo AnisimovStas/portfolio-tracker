@@ -6,6 +6,7 @@
       </div>
       <Miniprofile />
     </div>
+    <TabsSwitcher />
 
     <slot class="slot" />
     <div class="footer">футер с инфой</div>
@@ -13,6 +14,7 @@
 </template>
 <script setup lang="ts">
 import useAuthStore from "~/store/auth.store";
+import TabsSwitcher from "~/layers/Portfolio/components/TabsSwitcher/TabsSwitcher.vue";
 
 const authStore = useAuthStore();
 
