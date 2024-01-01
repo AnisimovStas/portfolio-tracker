@@ -4,24 +4,38 @@ import { Repository } from 'typeorm';
 import { Transaction } from './Entities/transaction.entity';
 import { CreateTransactionDto } from './dto/create-transaction.dto';
 import { User } from '../users/entities/user.entity';
+import { Crypto } from '../currencies/entities/crypto.entity';
 
 @Injectable()
 export class TransactionsService {
   constructor(
     @InjectRepository(Transaction)
     private readonly transactionRepository: Repository<Transaction>,
+    @InjectRepository(Crypto)
+    private readonly cryptoRepository: Repository<Crypto>,
   ) {}
 
   async createTransaction(
     transactionDto: CreateTransactionDto,
-    user: User | null,
+    userId: string,
   ): Promise<Transaction> {
-    if (!user || !user.id) {
+    if (!userId) {
       throw new HttpException('User not authenticated', HttpStatus.BAD_REQUEST);
     }
-    console.log(user);
 
-    const txWithUser = { ...transactionDto, userId: user.id };
+    transactionDto.ticker = transactionDto.ticker.toLowerCase();
+
+    const crypto = await this.cryptoRepository.findOneBy({
+      ticker: transactionDto.ticker,
+    });
+
+    if (!crypto) {
+      throw new HttpException('Crypto not found', HttpStatus.BAD_REQUEST);
+    }
+
+    const txWithUser = { ...transactionDto, userId };
+
+    txWithUser['crypto'] = crypto;
 
     return this.transactionRepository.save(txWithUser);
   }

@@ -1,4 +1,11 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  OneToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
+import { Portfolio } from '../../portfolios/Entity/Portfolio.entity';
 
 @Entity({ name: 'users' })
 export class User {
@@ -10,4 +17,8 @@ export class User {
 
   @Column()
   displayName: string;
+
+  @OneToOne(() => Portfolio, { eager: true })
+  @JoinColumn({ name: 'userId' })
+  portfolio: Portfolio;
 }

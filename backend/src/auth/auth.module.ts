@@ -19,7 +19,7 @@ import { JwtStrategy } from './utils/jwt.strategy';
     JwtModule.register({
       secret: 'TODO REMOVE',
       signOptions: {
-        expiresIn: '60s',
+        expiresIn: '6000s',
       },
     }),
   ],
