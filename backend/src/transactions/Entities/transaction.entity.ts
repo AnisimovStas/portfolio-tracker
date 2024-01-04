@@ -26,8 +26,8 @@ export class Transaction {
   @Column()
   currencyType: string;
 
-  @ManyToOne(() => Crypto, (crypto) => crypto.ticker, { eager: true })
-  crypto: Crypto;
+  @ManyToOne(() => Crypto, (crypto) => crypto.transactions)
+  cryptoData: Crypto;
 
   @ManyToOne(
     () => PortfolioCryptoRow,

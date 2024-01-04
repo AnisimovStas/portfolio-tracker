@@ -1,7 +1,7 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Transaction } from '../transactions/Entities/transaction.entity';
-import { In, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 import { User } from '../users/entities/user.entity';
 import { Crypto } from '../currencies/entities/crypto.entity';
 import { Portfolio } from './Entity/Portfolio.entity';
@@ -14,8 +14,6 @@ export class PortfoliosService {
   constructor(
     @InjectRepository(Transaction)
     private readonly transactionRepository: Repository<Transaction>,
-    @InjectRepository(User)
-    private readonly userRepository: Repository<User>,
     @InjectRepository(Crypto)
     private readonly cryptoRepository: Repository<Crypto>,
     @InjectRepository(Portfolio)
@@ -28,8 +26,39 @@ export class PortfoliosService {
   async getPortfolio(userId: string) {
     const portfolio = await this.portfolioRepository.findOne({
       where: { userId },
+      relations: {
+        crypto: {
+          transactions: {
+            cryptoData: true,
+          },
+        },
+      },
     });
-    return portfolio ?? '';
+
+    const modifiedCrypto = portfolio.crypto.map((currency) => {
+      const { totalAmount, totalPrice } =
+        this.transactionService.getTotalAmountAndPrice(
+          currency.transactions,
+          currency.stackingPercentage,
+        );
+      const { cryptoData } = currency.transactions[0];
+
+      return {
+        ...cryptoData,
+        stackingPercentage: currency.stackingPercentage,
+        description: currency.description,
+        id: currency.id,
+        totalAmount,
+        totalPrice,
+      };
+    });
+
+    const modifiedPortfolio = {
+      ...portfolio,
+      crypto: modifiedCrypto,
+    };
+
+    return modifiedPortfolio ?? '';
   }
 
   async addCurrency(userId: string, payload: CreateRowDto) {
@@ -40,6 +69,13 @@ export class PortfoliosService {
     });
 
     if (!portfolioCryptoRow) {
+      if (payload.transactionType === 'sell') {
+        throw new HttpException(
+          'Cannot sell crypto that you do not own',
+          HttpStatus.BAD_REQUEST,
+        );
+      }
+
       const portfolio = await this.portfolioRepository.findOne({
         where: { userId },
       });
@@ -66,7 +102,7 @@ export class PortfoliosService {
     newTransaction.transactionType = payload.transactionType;
     newTransaction.date = payload.date;
     newTransaction.currencyType = payload.currencyType;
-    newTransaction.crypto = crypto;
+    newTransaction.cryptoData = crypto;
 
     newTransaction.portfolioCryptoRow = portfolioCryptoRow;
 
@@ -80,22 +116,22 @@ export class PortfoliosService {
     return portfolio;
   }
 
-  async getUserTransactions(userId: string) {
-    const transactions = await this.transactionRepository.find({
-      where: { userId },
-    });
-    return transactions;
-
-    if (transactions.length > 0) {
-      const TickersArray = transactions
-        .map((transaction) => transaction.ticker.toLowerCase())
-        .filter((value, index, self) => self.indexOf(value) === index);
-      const cryptoList = await this.cryptoRepository.findBy({
-        ticker: In(TickersArray),
-      });
-      return { txData: transactions, coinInfo: cryptoList };
-    }
-
-    return [];
-  }
+  // async getUserTransactions(userId: string) {
+  //   const transactions = await this.transactionRepository.find({
+  //     where: { userId },
+  //   });
+  //   return transactions;
+  //
+  //   if (transactions.length > 0) {
+  //     const TickersArray = transactions
+  //       .map((transaction) => transaction.ticker.toLowerCase())
+  //       .filter((value, index, self) => self.indexOf(value) === index);
+  //     const cryptoList = await this.cryptoRepository.findBy({
+  //       ticker: In(TickersArray),
+  //     });
+  //     return { txData: transactions, coinInfo: cryptoList };
+  //   }
+  //
+  //   return [];
+  // }
 }

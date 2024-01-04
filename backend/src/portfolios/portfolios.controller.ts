@@ -26,9 +26,9 @@ export class PortfoliosController {
     return this.portfoliosService.createPortfolio(request.user['id']);
   }
 
-  @UseGuards(AuthGuard('jwt'))
-  @Get('actives')
-  async getActives(@Req() request: Request) {
-    return this.portfoliosService.getUserTransactions(request.user['id']);
-  }
+  // @UseGuards(AuthGuard('jwt'))
+  // @Get('actives')
+  // async getActives(@Req() request: Request) {
+  //   return this.portfoliosService.getUserTransactions(request.user['id']);
+  // }
 }

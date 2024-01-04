@@ -1,9 +1,11 @@
 import {
   Column,
   Entity,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { Transaction } from '../../transactions/Entities/transaction.entity';
 
 @Entity()
 export class Crypto {
@@ -27,4 +29,7 @@ export class Crypto {
 
   @UpdateDateColumn()
   updatedAt: Date;
+
+  @OneToMany(() => Transaction, (transaction) => transaction.cryptoData)
+  transactions: Transaction[];
 }

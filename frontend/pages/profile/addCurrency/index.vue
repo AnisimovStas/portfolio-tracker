@@ -11,12 +11,12 @@ import { useAuthStore } from "~/store/auth.store";
 
 const addCurrency = async () => {
   const payload: ICryptoPayload = {
-    amount: "100",
+    amount: "20",
     currencyType: "crypto",
-    date: "12-12-2012",
+    date: "12-12-2020",
     description: "test",
-    stackingPercentage: "0",
-    ticker: "btc",
+    stackingPercentage: "5.5",
+    ticker: "dot",
     transactionType: "buy",
   };
   const { data } = await useFetch("/api/portfolios/addCurrency", {

@@ -5,6 +5,7 @@ import { Transaction } from './Entities/transaction.entity';
 import { CreateTransactionDto } from './dto/create-transaction.dto';
 import { User } from '../users/entities/user.entity';
 import { Crypto } from '../currencies/entities/crypto.entity';
+import { computeAmountAfterStacking, trimByValue } from './utils/helpers';
 
 @Injectable()
 export class TransactionsService {
@@ -52,5 +53,27 @@ export class TransactionsService {
     return this.transactionRepository.find({
       where: { userId: user.id },
     });
+  }
+
+  public getTotalAmountAndPrice(
+    transactions: Transaction[],
+    stackingPercentage: string,
+  ): { totalAmount: number; totalPrice: number } {
+    let totalAmount = 0;
+    transactions.forEach((transaction) => {
+      if (transaction.transactionType === 'sell') {
+        totalAmount -= Number(transaction.amount);
+      } else {
+        totalAmount += computeAmountAfterStacking(
+          transaction.amount,
+          transaction.date,
+          stackingPercentage,
+        );
+      }
+    });
+
+    const { currentPrice } = transactions[0].cryptoData;
+    const totalPrice = trimByValue(totalAmount * Number(currentPrice));
+    return { totalAmount, totalPrice };
   }
 }

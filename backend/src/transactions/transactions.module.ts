@@ -10,5 +10,6 @@ import { Crypto } from '../currencies/entities/crypto.entity';
   imports: [TypeOrmModule.forFeature([Transaction, Crypto]), AuthModule],
   providers: [TransactionsService],
   controllers: [TransactionsController],
+  exports: [TransactionsService],
 })
 export class TransactionsModule {}
