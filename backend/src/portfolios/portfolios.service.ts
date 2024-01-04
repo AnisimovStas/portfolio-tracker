@@ -2,7 +2,6 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Transaction } from '../transactions/Entities/transaction.entity';
 import { Repository } from 'typeorm';
-import { User } from '../users/entities/user.entity';
 import { Crypto } from '../currencies/entities/crypto.entity';
 import { Portfolio } from './Entity/Portfolio.entity';
 import { PortfolioCryptoRow } from './Entity/PortfolioCryptoRow.entity';
