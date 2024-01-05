@@ -4,6 +4,7 @@ import {
   HttpException,
   HttpStatus,
   Param,
+  Query,
 } from '@nestjs/common';
 import axios from 'axios';
 import { CurrenciesService } from './currencies.service';
@@ -63,8 +64,8 @@ export class CurrenciesController {
     return this.currenciesService.getCryptoList();
   }
 
-  @Get('crypto/list/:search')
-  async getCryptoListBySearch(@Param('search') search: string): Promise<any> {
+  @Get('crypto/list/search')
+  async getCryptoListBySearch(@Query('search') search: string): Promise<any> {
     return this.currenciesService.getCryptoListBySearch(search);
   }
 }

@@ -96,6 +96,10 @@ export class CurrenciesService {
   }
 
   async getCryptoListBySearch(search: string) {
+    if (!search) {
+      return [];
+    }
+
     const cryptos = await this.cryptoRepository.find({
       where: [{ name: Like(`%${search}%`) }, { ticker: Like(`%${search}%`) }],
       take: 10,
