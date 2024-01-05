@@ -8,6 +8,7 @@ export default defineNuxtConfig({
     "vuetify-nuxt-module",
     "@nuxtjs/eslint-module",
     "nuxt-viewport",
+    "@nuxt/image",
   ],
   nitro: {
     devProxy: {

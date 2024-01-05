@@ -1,35 +1,15 @@
-import type {
-  TCurrencyType,
-  TTransaction,
-} from "~/services/transactions/transactions.types";
-
-export interface ICryptoData {
+export interface IPortfolioCryptoRow {
   coinGeckoId: string;
   currentPrice: string;
+  description: string;
   icon: string;
   id: number;
   name: string;
-  ticker: string;
-  updatedAt: Date;
-}
-
-export interface ITransaction {
-  amount: string;
-  cryptoData: ICryptoData;
-  currencyType: TCurrencyType;
-  date: Date;
-  id: number;
-  ticker: string;
-  transactionType: TTransaction;
-  userId: string;
-}
-
-export interface IPortfolioCryptoRow {
-  description: string;
-  id: number;
   stackingPercentage: number;
   ticker: string;
-  transactions: ITransaction[];
+  totalAmount: number;
+  totalPrice: number;
+  updatedAt: Date;
   userId: string;
 }
 

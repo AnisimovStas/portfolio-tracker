@@ -4,13 +4,32 @@
       <div class="header__title">Хеддер блока с активами</div>
       <v-btn @click="navigateTo('/profile/addCurrency')">Добавить актив</v-btn>
     </div>
-    <div class="active__block">Блок с криптовалютами</div>
+    <div class="active__block">
+      Блок с криптовалютами
+
+      <Active
+        v-for="crypto in portfolioStore.data?.crypto"
+        :key="crypto.id"
+        :icon="crypto.icon"
+        :name="crypto.name"
+        :amount="crypto.totalAmount"
+        :current-price="crypto.currentPrice"
+        :profit="100"
+        :profit-percentage="'10%'"
+        :total-price="crypto.totalPrice"
+      />
+    </div>
     <div class="active__block">Блок с ру акциями</div>
     <div class="active__block">Блок с ру облигациями</div>
     <div class="active__block">Блок с фондами</div>
   </div>
 </template>
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import { usePortfolioStore } from "~/layers/Portfolio/store/Portfolio.store";
+import Active from "~/layers/Portfolio/components/Active/Active.vue";
+
+const portfolioStore = usePortfolioStore();
+</script>
 <style scoped>
 .container {
   display: flex;
@@ -35,6 +54,7 @@
 
 .active__block {
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
   width: 100%;
