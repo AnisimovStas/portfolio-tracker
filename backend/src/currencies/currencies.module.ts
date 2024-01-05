@@ -11,5 +11,6 @@ import { Fiat } from './entities/fiat.entity';
   imports: [TypeOrmModule.forFeature([Crypto, Fiat]), HttpModule],
   providers: [CurrenciesService, ImageService],
   controllers: [CurrenciesController],
+  exports: [CurrenciesService],
 })
 export class CurrenciesModule {}

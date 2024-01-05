@@ -1,9 +1,5 @@
+import type { IPortfolioCryptoRow } from "~/layers/Portfolio/store/Portfolio.store";
+
 export interface IActiveTypesProps {
-  amount: number;
-  currentPrice: string;
-  icon: string;
-  name: string;
-  profit: number;
-  profitPercentage: string;
-  totalPrice: number;
+  active: IPortfolioCryptoRow;
 }

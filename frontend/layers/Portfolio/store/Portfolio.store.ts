@@ -5,6 +5,8 @@ export interface IPortfolioCryptoRow {
   icon: string;
   id: number;
   name: string;
+  profit: number;
+  profitPercentage: string;
   stackingPercentage: number;
   ticker: string;
   totalAmount: number;

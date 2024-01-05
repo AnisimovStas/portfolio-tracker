@@ -7,6 +7,7 @@ import { Portfolio } from './Entity/Portfolio.entity';
 import { PortfolioCryptoRow } from './Entity/PortfolioCryptoRow.entity';
 import { CreateRowDto } from './dto/create-row.dto';
 import { TransactionsService } from '../transactions/transactions.service';
+import { CurrenciesService } from '../currencies/currencies.service';
 
 @Injectable()
 export class PortfoliosService {
@@ -20,6 +21,7 @@ export class PortfoliosService {
     @InjectRepository(PortfolioCryptoRow)
     private readonly portfolioCryptoRowRepository: Repository<PortfolioCryptoRow>,
     private readonly transactionService: TransactionsService,
+    private readonly currencyService: CurrenciesService,
   ) {}
 
   async getPortfolio(userId: string) {
@@ -35,8 +37,8 @@ export class PortfoliosService {
     });
 
     const modifiedCrypto = portfolio.crypto.map((currency) => {
-      const { totalAmount, totalPrice } =
-        this.transactionService.getTotalAmountAndPrice(
+      const { totalAmount, totalPrice, totalAveragePrice } =
+        this.transactionService.getTotalInfo(
           currency.transactions,
           currency.stackingPercentage,
         );
@@ -49,6 +51,12 @@ export class PortfoliosService {
         id: currency.id,
         totalAmount,
         totalPrice,
+        totalAveragePrice,
+        profit: totalPrice - totalAveragePrice,
+        profitPercentage: (
+          ((totalPrice - totalAveragePrice) / totalAveragePrice) *
+          100
+        ).toFixed(2),
       };
     });
 
@@ -95,6 +103,15 @@ export class PortfoliosService {
       ticker: ticker,
     });
 
+    const historicalPrice = await this.currencyService.getCryptoHistoricalPrice(
+      crypto.coinGeckoId,
+      payload.date,
+    );
+
+    if (!historicalPrice) {
+      throw new HttpException('Invalid date', HttpStatus.BAD_REQUEST);
+    }
+
     newTransaction.userId = userId;
     newTransaction.ticker = ticker;
     newTransaction.amount = payload.amount;
@@ -102,6 +119,7 @@ export class PortfoliosService {
     newTransaction.date = payload.date;
     newTransaction.currencyType = payload.currencyType;
     newTransaction.cryptoData = crypto;
+    newTransaction.priceAtDate = historicalPrice;
 
     newTransaction.portfolioCryptoRow = portfolioCryptoRow;
 

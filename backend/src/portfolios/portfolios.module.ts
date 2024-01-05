@@ -9,6 +9,9 @@ import { Fiat } from '../currencies/entities/fiat.entity';
 import { Portfolio } from './Entity/Portfolio.entity';
 import { PortfolioCryptoRow } from './Entity/PortfolioCryptoRow.entity';
 import { TransactionsService } from '../transactions/transactions.service';
+import { CurrenciesService } from '../currencies/currencies.service';
+import { ImageService } from '../image/image.service';
+import { HttpModule } from '@nestjs/axios';
 
 @Module({
   imports: [
@@ -20,8 +23,14 @@ import { TransactionsService } from '../transactions/transactions.service';
       Portfolio,
       PortfolioCryptoRow,
     ]),
+    HttpModule,
   ],
-  providers: [PortfoliosService, TransactionsService],
+  providers: [
+    PortfoliosService,
+    TransactionsService,
+    CurrenciesService,
+    ImageService,
+  ],
   controllers: [PortfoliosController],
 })
 export class PortfoliosModule {}

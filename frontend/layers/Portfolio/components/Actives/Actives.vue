@@ -10,13 +10,7 @@
       <Active
         v-for="crypto in portfolioStore.data?.crypto"
         :key="crypto.id"
-        :icon="crypto.icon"
-        :name="crypto.name"
-        :amount="crypto.totalAmount"
-        :current-price="crypto.currentPrice"
-        :profit="100"
-        :profit-percentage="'10%'"
-        :total-price="crypto.totalPrice"
+        :active="crypto"
       />
     </div>
     <div class="active__block">Блок с ру акциями</div>

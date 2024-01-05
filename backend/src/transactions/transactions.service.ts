@@ -55,11 +55,12 @@ export class TransactionsService {
     });
   }
 
-  public getTotalAmountAndPrice(
+  public getTotalInfo(
     transactions: Transaction[],
     stackingPercentage: string,
-  ): { totalAmount: number; totalPrice: number } {
+  ): { totalAmount: number; totalPrice: number; totalAveragePrice: number } {
     let totalAmount = 0;
+    let averagePrice = 0;
     transactions.forEach((transaction) => {
       if (transaction.transactionType === 'sell') {
         totalAmount -= Number(transaction.amount);
@@ -69,11 +70,13 @@ export class TransactionsService {
           transaction.date,
           stackingPercentage,
         );
+        averagePrice += Number(transaction.priceAtDate) / transactions.length;
       }
     });
 
     const { currentPrice } = transactions[0].cryptoData;
     const totalPrice = trimByValue(totalAmount * Number(currentPrice));
-    return { totalAmount, totalPrice };
+    const totalAveragePrice = trimByValue(averagePrice * totalAmount);
+    return { totalAmount, totalPrice, totalAveragePrice };
   }
 }

@@ -26,6 +26,9 @@ export class Transaction {
   @Column()
   currencyType: string;
 
+  @Column()
+  priceAtDate: string;
+
   @ManyToOne(() => Crypto, (crypto) => crypto.transactions)
   cryptoData: Crypto;
 

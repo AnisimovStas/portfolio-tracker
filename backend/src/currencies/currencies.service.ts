@@ -8,6 +8,7 @@ import { Like, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Crypto } from './entities/crypto.entity';
 import { Fiat } from './entities/fiat.entity';
+import { trimByValue } from '../transactions/utils/helpers';
 
 @Injectable()
 export class CurrenciesService {
@@ -143,5 +144,19 @@ export class CurrenciesService {
         HttpStatus.FORBIDDEN,
       );
     }
+  }
+
+  public async getCryptoHistoricalPrice(
+    coinGeckoId: string,
+    date: string,
+  ): Promise<any> {
+    const url = `https://api.coingecko.com/api/v3/coins/${coinGeckoId}/history?date=${date}&localization=en`;
+
+    const { data } = await firstValueFrom(this.httpService.get(url));
+
+    if (data?.market_data) {
+      return trimByValue(data.market_data.current_price.usd);
+    }
+    return 0;
   }
 }

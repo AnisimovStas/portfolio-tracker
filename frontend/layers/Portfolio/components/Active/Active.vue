@@ -3,18 +3,18 @@
     <div class="left-side">
       <NuxtImg :width="50" :height="50" :src="computeSrc" />
       <div class="general__info">
-        <p>{{ props.name }}</p>
+        <p>{{ active.name }}</p>
         <div class="prices">
-          <p>{{ props.amount }}</p>
-          <p>{{ props.currentPrice }}</p>
+          <p>{{ active.totalAmount }}</p>
+          <p>{{ active.currentPrice }}</p>
         </div>
       </div>
     </div>
     <div class="right-side">
-      <p>{{ props.totalPrice }}</p>
+      <p>{{ active.totalPrice }}</p>
       <div class="profit__info">
-        <p>{{ props.profit }}</p>
-        <p>{{ props.profitPercentage }}</p>
+        <p>{{ active.profit }}</p>
+        <p>{{ active.profitPercentage }}%</p>
       </div>
     </div>
   </div>
@@ -25,7 +25,7 @@ import type { IActiveTypesProps } from "~/layers/Portfolio/components/Active/Act
 const props = defineProps<IActiveTypesProps>();
 
 const computeSrc = computed(() => {
-  return `http://localhost:9229${props.icon}`;
+  return `http://localhost:9229${props.active.icon}`;
 });
 </script>
 <style scoped>
