@@ -25,7 +25,7 @@
   </div>
 </template>
 <script setup lang="ts">
-import useAuthStore from "~/store/auth.store";
+import { useAuthStore } from "~/store/auth.store";
 
 const authStore = useAuthStore();
 </script>
@@ -43,7 +43,7 @@ const authStore = useAuthStore();
   display: flex;
   flex-direction: column;
   gap: 4px;
-  align-items: start;
+  align-items: flex-start;
   justify-content: center;
   width: 100%;
 }
@@ -58,7 +58,7 @@ const authStore = useAuthStore();
   display: flex;
   flex-direction: column;
   gap: 4px;
-  align-items: start;
+  align-items: flex-start;
   justify-content: center;
   width: 100%;
 }

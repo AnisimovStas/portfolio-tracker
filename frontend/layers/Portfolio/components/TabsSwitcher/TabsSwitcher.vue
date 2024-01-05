@@ -1,40 +1,33 @@
 <template>
   <div class="tabs-switcher">
-    <VBtnToggle
-      v-model="activeTab"
-      class="tabs"
-      mandatory
-      color="grey-darken-1"
-    >
-      <VBtn v-for="tab in tabs" :key="tab.value" @click="navigateTo(tab.path)">
-        {{ tab.title }}
-      </VBtn>
-    </VBtnToggle>
+    <UTabs v-model="activeTab" :items="tabs" />
   </div>
 </template>
 <script setup lang="ts">
 import { ETabs } from "~/layers/Portfolio/components/TabsSwitcher/TabsSwitcher.types";
 
-const tabs = computed(() => {
-  return [
-    {
-      path: "/profile",
-      title: "Информацио о портфолио",
-      value: ETabs.INFO,
-    },
-    {
-      path: "/profile/analytics",
-      title: "Аналитика",
-      value: ETabs.ANALYTICS,
-    },
-  ].map((tab, index) =>
-    index === activeTab.value
-      ? { ...tab, active: true }
-      : { ...tab, active: false },
-  );
-});
+const tabs = [
+  {
+    label: "Информацио о портфолио",
+    path: "/profile",
+    value: ETabs.INFO,
+  },
+  {
+    label: "Аналитика",
+    path: "/profile/analytics",
+    value: ETabs.ANALYTICS,
+  },
+];
 
-const activeTab = ref(0);
+const route = useRoute();
+const activeTab = computed({
+  get() {
+    return tabs.findIndex((tab) => tab.path === route.path);
+  },
+  set(value) {
+    navigateTo(tabs[value].path);
+  },
+});
 </script>
 
 <style scoped>

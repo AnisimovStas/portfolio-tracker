@@ -16,5 +16,13 @@ const activeLayout = computed(() => {
 });
 </script>
 
+<style>
+body {
+  font-family: Roboto, sans-serif;
+  color: black;
+  background: whitesmoke;
+}
+</style>
+
 <style src="assets/Colors.css" />
 <style src="assets/Gaps.css" />

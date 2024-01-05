@@ -58,7 +58,7 @@ const computeSrc = computed(() => {
   display: flex;
   flex-direction: column;
   gap: var(--gap-xs);
-  align-items: start;
+  align-items: flex-start;
 }
 
 .profit__info {

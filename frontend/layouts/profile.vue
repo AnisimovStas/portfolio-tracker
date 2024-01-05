@@ -13,7 +13,7 @@
   </div>
 </template>
 <script setup lang="ts">
-import useAuthStore from "~/store/auth.store";
+import { useAuthStore } from "~/store/auth.store";
 import TabsSwitcher from "~/layers/Portfolio/components/TabsSwitcher/TabsSwitcher.vue";
 
 const authStore = useAuthStore();

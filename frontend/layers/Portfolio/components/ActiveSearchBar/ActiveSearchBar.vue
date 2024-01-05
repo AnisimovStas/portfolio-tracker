@@ -1,14 +1,14 @@
 <template>
   <div class="active__searchbar">
-    <v-combobox
-      :model-value="activeName"
-      :items="actives"
-      :loading="loading"
-      no-filter
-      label="Найти актив"
-      clearable
-      @update:model-value="$emit('update:activeName', $event)"
-    ></v-combobox>
+    <!--    <v-combobox-->
+    <!--      :model-value="activeName"-->
+    <!--      :items="actives"-->
+    <!--      :loading="loading"-->
+    <!--      no-filter-->
+    <!--      label="Найти актив"-->
+    <!--      clearable-->
+    <!--      @update:model-value="$emit('update:activeName', $event)"-->
+    <!--    ></v-combobox>-->
   </div>
 </template>
 <script setup lang="ts">

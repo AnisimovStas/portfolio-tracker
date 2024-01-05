@@ -5,10 +5,10 @@ export default defineNuxtConfig({
     "@pinia/nuxt",
     "@nuxtjs/stylelint-module",
     "nuxt-svgo",
-    "vuetify-nuxt-module",
     "@nuxtjs/eslint-module",
     "nuxt-viewport",
     "@nuxt/image",
+    "@nuxt/ui",
   ],
   nitro: {
     devProxy: {

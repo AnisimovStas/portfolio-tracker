@@ -12,7 +12,7 @@
       v-model:stacking-percentage="stackingPercentage"
     />
 
-    <v-btn @click="addCurrency">Add currency</v-btn>
+    <button @click="addCurrency">Add currency</button>
   </div>
 </template>
 <script setup lang="ts">
@@ -92,6 +92,6 @@ onBeforeMount(async () => {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: start;
+  justify-content: flex-start;
 }
 </style>

@@ -6,7 +6,7 @@
     </div>
     <div v-else class="empty-portfolio">
       <p>Вы еще не создали портфеля, нажмите кнопку создать портфель</p>
-      <VBtn @click="createPortfolio"> Создать портфель</VBtn>
+      <UButton @click="createPortfolio">Создать портфель</UButton>
     </div>
   </div>
 </template>

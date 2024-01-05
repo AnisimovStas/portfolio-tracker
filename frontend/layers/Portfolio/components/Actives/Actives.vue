@@ -2,7 +2,9 @@
   <div class="container">
     <div class="actives__header">
       <div class="header__title">Хеддер блока с активами</div>
-      <v-btn @click="navigateTo('/profile/addCurrency')">Добавить актив</v-btn>
+      <button @click="navigateTo('/profile/addCurrency')">
+        Добавить актив
+      </button>
     </div>
     <div class="active__block">
       Блок с криптовалютами
