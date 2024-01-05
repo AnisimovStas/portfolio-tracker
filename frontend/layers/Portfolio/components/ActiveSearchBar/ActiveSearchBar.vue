@@ -1,28 +1,43 @@
 <template>
   <div class="active__searchbar">
-    <!--    <v-combobox-->
-    <!--      :model-value="activeName"-->
-    <!--      :items="actives"-->
-    <!--      :loading="loading"-->
-    <!--      no-filter-->
-    <!--      label="Найти актив"-->
-    <!--      clearable-->
-    <!--      @update:model-value="$emit('update:activeName', $event)"-->
-    <!--    ></v-combobox>-->
+    <USelectMenu
+      v-model="addCurrencyStore.selectedActive"
+      :searchable="search"
+      searchable-placeholder="Найти актив"
+      placeholder="Найти актив"
+      option-attribute="name"
+      by="id"
+    />
   </div>
 </template>
 <script setup lang="ts">
-import type {
-  IActiveSearchBarEmits,
-  IActiveSearchBarProps,
-} from "~/layers/Portfolio/components/ActiveSearchBar/ActiveSearchBar.types";
+import type { ICrypto } from "~/layers/Portfolio/services/crypto/crypto.types";
+import { useAddCurrencyStore } from "~/layers/Portfolio/store/addCurrency.store";
 
-defineProps<IActiveSearchBarProps>();
-defineEmits<IActiveSearchBarEmits>();
+const addCurrencyStore = useAddCurrencyStore();
+
+const loading = ref(false);
+
+async function search(query: string) {
+  loading.value = true;
+
+  const actives = await $fetch<ICrypto>(
+    `http://localhost:9229/api/currencies/crypto/list/search`,
+    {
+      query: {
+        search: query,
+      },
+    },
+  );
+
+  loading.value = false;
+  return actives;
+}
 </script>
 
 <style scoped>
 .active__searchbar {
   width: 300px;
+  height: 300px;
 }
 </style>
