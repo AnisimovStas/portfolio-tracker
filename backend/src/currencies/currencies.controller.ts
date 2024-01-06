@@ -41,12 +41,7 @@ export class CurrenciesController {
 
   @Get('crypto/update-prices')
   async updateCryptoPrices(): Promise<any> {
-    return this.currenciesService.updateCryptoPrices();
-  }
-
-  @Get('crypto/setCryptoInterval')
-  async setIntervalForFetchingCryptoPrices() {
-    return this.currenciesService.setCryptoInterval();
+    return this.currenciesService.updateCryptoPrices(1);
   }
 
   @Get('fiat/update-prices')

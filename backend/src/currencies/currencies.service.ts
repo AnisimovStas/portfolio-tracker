@@ -4,11 +4,12 @@ import * as path from 'path';
 import { HttpService } from '@nestjs/axios';
 import { catchError, firstValueFrom } from 'rxjs';
 import { AxiosError } from 'axios';
-import { Like, Repository } from 'typeorm';
+import { In, Like, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Crypto } from './entities/crypto.entity';
 import { Fiat } from './entities/fiat.entity';
 import { trimByValue } from '../transactions/utils/helpers';
+import { Cron, Interval } from '@nestjs/schedule';
 
 @Injectable()
 export class CurrenciesService {
@@ -59,10 +60,13 @@ export class CurrenciesService {
     return this.cryptoRepository.save(cryptos);
   }
 
-  async updateCryptoPrices() {
+  async updateCryptoPrices(part: number) {
     const gigaCryptoArray = [];
 
-    for (let page = 1; page <= 4; page++) {
+    const initPage = part === 1 ? 1 : 3;
+    const endPage = part === 1 ? 2 : 4;
+
+    for (let page = initPage; page <= endPage; page++) {
       const data = await this.fetchCryptoCoins(page);
       gigaCryptoArray.push(...data);
     }
@@ -73,16 +77,57 @@ export class CurrenciesService {
         currentPrice: crypto.current_price,
       };
     });
+
+    if (updatedCryptos.length < 10) {
+      throw new HttpException(
+        'Error while updating crypto prices',
+        HttpStatus.FORBIDDEN,
+      );
+    }
+
+    const uniqueCoinGeckoIds: string[] = updatedCryptos.map(
+      (item) => item.coinGeckoId,
+    );
+    const cryptoObjects = await this.cryptoRepository.find({
+      where: {
+        coinGeckoId: In(uniqueCoinGeckoIds),
+      },
+    });
+
+    console.log('we here');
+    console.log(cryptoObjects.length);
+    cryptoObjects.forEach((crypto) => {
+      const matchingData = updatedCryptos.find(
+        (item) => item.coinGeckoId === crypto.coinGeckoId,
+      );
+      if (matchingData) {
+        crypto.currentPrice = matchingData.currentPrice;
+      }
+    });
+
+    await this.cryptoRepository.save(cryptoObjects);
+
     return updatedCryptos;
   }
 
-  async setCryptoInterval() {
-    const INTERVAL = 5 * 60 * 1000;
+  @Cron('0 10/30 * * * *')
+  async intervalUpdateCryptoPricesP1() {
+    try {
+      await this.updateCryptoPrices(1);
+      console.log('Crypto prices just updated!');
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
-    setInterval(async () => {
-      await this.updateCryptoPrices();
-    }, INTERVAL);
-    return { msg: 'Crypto interval setted' };
+  @Cron('0 15/30 * * * *')
+  async intervalUpdateCryptoPricesP2() {
+    try {
+      await this.updateCryptoPrices(2);
+      console.log('Crypto prices just updated!');
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   async getCryptoList() {
@@ -132,6 +177,16 @@ export class CurrenciesService {
       return { msg: 'there is no USD' };
     } else {
       throw new HttpException('Error', HttpStatus.FORBIDDEN);
+    }
+  }
+
+  @Interval(1000 * 60 * 60)
+  async intervalUpdateFiatPrices() {
+    try {
+      await this.updateFiatPrices();
+      console.log('Fiat prices just updated!');
+    } catch (error) {
+      console.log(error);
     }
   }
 
