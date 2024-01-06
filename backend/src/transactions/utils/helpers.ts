@@ -27,18 +27,17 @@ export const trimByValue = (value: number): number => {
   return value;
 };
 
-export const computeAmountAfterStacking = (
+export const computeTxStackedAmount = (
   initAmount: string,
   txDate: string,
   stakingPercentage: string,
 ) => {
   if (!+stakingPercentage) {
-    return Number(initAmount);
+    return 0;
   }
   const stackingPerDay = Number(stakingPercentage) / 100 / 365;
   const daysDifference = calculateDaysDifference(txDate);
 
-  const amountAfterStacking =
-    Number(initAmount) * (1 + stackingPerDay * daysDifference);
-  return trimByValue(amountAfterStacking);
+  const stackedAmount = stackingPerDay * daysDifference * Number(initAmount);
+  return trimByValue(stackedAmount);
 };

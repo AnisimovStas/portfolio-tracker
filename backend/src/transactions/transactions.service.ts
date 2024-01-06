@@ -5,7 +5,7 @@ import { Transaction } from './Entities/transaction.entity';
 import { CreateTransactionDto } from './dto/create-transaction.dto';
 import { User } from '../users/entities/user.entity';
 import { Crypto } from '../currencies/entities/crypto.entity';
-import { computeAmountAfterStacking, trimByValue } from './utils/helpers';
+import { computeTxStackedAmount, trimByValue } from './utils/helpers';
 
 @Injectable()
 export class TransactionsService {
@@ -58,25 +58,55 @@ export class TransactionsService {
   public getTotalInfo(
     transactions: Transaction[],
     stackingPercentage: string,
-  ): { totalAmount: number; totalPrice: number; totalAveragePrice: number } {
+  ): {
+    totalAmount: number;
+    totalPrice: number;
+    totalAveragePrice: number;
+    totalStackedAmount: number;
+    totalStackedInFiat: number;
+    averagePrice: number;
+  } {
     let totalAmount = 0;
     let averagePrice = 0;
+    let totalStackedAmount = 0;
     transactions.forEach((transaction) => {
+      const stacked = computeTxStackedAmount(
+        transaction.amount,
+        transaction.date,
+        stackingPercentage,
+      );
+
+      if (transaction.ticker === 'usdt') {
+        console.log(stacked);
+      }
+
       if (transaction.transactionType === 'sell') {
+        totalStackedAmount -= stacked; // remove potentially profit
         totalAmount -= Number(transaction.amount);
       } else {
-        totalAmount += computeAmountAfterStacking(
-          transaction.amount,
-          transaction.date,
-          stackingPercentage,
-        );
-        averagePrice += Number(transaction.priceAtDate) / transactions.length;
+        totalStackedAmount += stacked;
+        totalAmount += +transaction.amount + stacked;
+        averagePrice +=
+          Number(transaction.priceAtDate) /
+          transactions.filter((tx) => tx.transactionType === 'buy').length;
       }
     });
 
     const { currentPrice } = transactions[0].cryptoData;
+    //totalPrice -- сколько все стоит сейчас
     const totalPrice = trimByValue(totalAmount * Number(currentPrice));
+    //totalAveragePrice -- сколько потратил денег на закупку
     const totalAveragePrice = trimByValue(averagePrice * totalAmount);
-    return { totalAmount, totalPrice, totalAveragePrice };
+    const totalStackedInFiat = trimByValue(
+      totalStackedAmount * Number(currentPrice),
+    );
+    return {
+      totalAmount,
+      totalPrice,
+      averagePrice,
+      totalAveragePrice,
+      totalStackedAmount,
+      totalStackedInFiat,
+    };
   }
 }

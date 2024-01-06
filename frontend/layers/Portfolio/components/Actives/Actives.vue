@@ -16,6 +16,8 @@
       <Active
         v-for="crypto in portfolioStore.data?.crypto"
         :key="crypto.id"
+        :total-block-value="portfolioStore.totalCryptoValue"
+        :block-type="'crypto'"
         :active="crypto"
       />
     </div>

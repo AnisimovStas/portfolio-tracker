@@ -37,20 +37,41 @@ export class PortfoliosService {
     });
 
     const modifiedCrypto = portfolio.crypto.map((currency) => {
-      const { totalAmount, totalPrice, totalAveragePrice } =
-        this.transactionService.getTotalInfo(
-          currency.transactions,
-          currency.stackingPercentage,
-        );
+      const {
+        totalAmount,
+        totalPrice,
+        totalAveragePrice,
+        averagePrice,
+        totalStackedAmount,
+        totalStackedInFiat,
+      } = this.transactionService.getTotalInfo(
+        currency.transactions,
+        currency.stackingPercentage,
+      );
       const { cryptoData } = currency.transactions[0];
+
+      const transactionsWithFilteredFields = currency.transactions.map((tx) => {
+        return {
+          id: tx.id,
+          ticker: tx.ticker,
+          transactionType: tx.transactionType,
+          amount: tx.amount,
+          priceAtDate: tx.priceAtDate,
+          date: tx.date,
+        };
+      });
 
       return {
         ...cryptoData,
+        transactions: transactionsWithFilteredFields,
         stackingPercentage: currency.stackingPercentage,
         description: currency.description,
         id: currency.id,
         totalAmount,
         totalPrice,
+        averagePrice,
+        totalStackedAmount,
+        totalStackedInFiat,
         totalAveragePrice,
         profit: totalPrice - totalAveragePrice,
         profitPercentage: (

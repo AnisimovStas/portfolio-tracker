@@ -1,4 +1,13 @@
+export interface ICryptoRowTransaction {
+  amount: number;
+  date: Date;
+  id: number;
+  priceAtDate: number;
+  ticker: string;
+  transactionType: string;
+}
 export interface IPortfolioCryptoRow {
+  averagePrice: number;
   coinGeckoId: string;
   currentPrice: string;
   description: string;
@@ -11,6 +20,9 @@ export interface IPortfolioCryptoRow {
   ticker: string;
   totalAmount: number;
   totalPrice: number;
+  totalStackedAmount: number;
+  totalStackedInFiat: number;
+  transactions: ICryptoRowTransaction[];
   updatedAt: Date;
   userId: string;
 }
@@ -23,6 +35,18 @@ export interface IPortfolio {
 
 export const usePortfolioStore = defineStore("portfolio", () => {
   const isAuthCookie = useCookie("authorization");
+
+  const totalCryptoValue = computed(() => {
+    let totalValue = 0;
+    data.value?.crypto?.forEach((cryptoRow) => {
+      totalValue += cryptoRow.totalPrice;
+    });
+    return totalValue;
+  });
+
+  const totalPortfolioValue = computed(() => {
+    return totalCryptoValue.value;
+  });
 
   const { data, pending, refresh } = useFetch<IPortfolio>("/api/portfolios", {
     headers: {
@@ -51,5 +75,7 @@ export const usePortfolioStore = defineStore("portfolio", () => {
     getActives,
     isPortfolioEmpty,
     pending,
+    totalCryptoValue,
+    totalPortfolioValue,
   };
 });
