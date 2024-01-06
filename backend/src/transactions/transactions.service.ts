@@ -65,6 +65,8 @@ export class TransactionsService {
     totalStackedAmount: number;
     totalStackedInFiat: number;
     averagePrice: number;
+    profit: number;
+    profitPercentage: string;
   } {
     let totalAmount = 0;
     let averagePrice = 0;
@@ -100,13 +102,22 @@ export class TransactionsService {
     const totalStackedInFiat = trimByValue(
       totalStackedAmount * Number(currentPrice),
     );
+
+    const profit = trimByValue(totalPrice - totalAveragePrice);
+    const profitPercentage = (
+      ((totalPrice - totalAveragePrice) / totalAveragePrice) *
+      100
+    ).toFixed(2);
+
     return {
-      totalAmount,
+      totalAmount: trimByValue(totalAmount),
       totalPrice,
       averagePrice,
       totalAveragePrice,
       totalStackedAmount,
       totalStackedInFiat,
+      profit,
+      profitPercentage,
     };
   }
 }

@@ -44,6 +44,8 @@ export class PortfoliosService {
         averagePrice,
         totalStackedAmount,
         totalStackedInFiat,
+        profit,
+        profitPercentage,
       } = this.transactionService.getTotalInfo(
         currency.transactions,
         currency.stackingPercentage,
@@ -73,11 +75,8 @@ export class PortfoliosService {
         totalStackedAmount,
         totalStackedInFiat,
         totalAveragePrice,
-        profit: totalPrice - totalAveragePrice,
-        profitPercentage: (
-          ((totalPrice - totalAveragePrice) / totalAveragePrice) *
-          100
-        ).toFixed(2),
+        profit,
+        profitPercentage,
       };
     });
 
