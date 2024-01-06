@@ -1,6 +1,6 @@
 <template>
   <NuxtLayout :name="activeLayout">
-    <NuxtPage />
+    <NuxtPage class="bg-gray-900 min-h-screen" />
   </NuxtLayout>
 </template>
 
@@ -8,7 +8,7 @@
 const route = useRoute();
 
 const activeLayout = computed(() => {
-  if (route.path.includes("/profile")) {
+  if (route.path.includes("/profile") && !route.path.includes("/addCurrency")) {
     return "profile";
   }
 
@@ -19,7 +19,6 @@ const activeLayout = computed(() => {
 <style>
 body {
   font-family: Roboto, sans-serif;
-  color: black;
   background: whitesmoke;
 }
 

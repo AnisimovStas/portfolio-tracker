@@ -1,5 +1,5 @@
 <template>
-  <div class="tabs-switcher">
+  <div class="tabs-switcher bg-gray-900">
     <UTabs v-model="activeTab" :items="tabs" />
   </div>
 </template>
@@ -36,6 +36,6 @@ const activeTab = computed({
   align-items: center;
   justify-content: center;
   width: 100%;
-  margin: var(--gap-xs) 0;
+  padding: var(--gap-xs) 0;
 }
 </style>
