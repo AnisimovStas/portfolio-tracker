@@ -1,11 +1,7 @@
 <template>
-  <div class="page-container">
+  <div class="page-container gap-2">
     <ActiveSearchBar />
-    <!--    <CryptoAddForm-->
-    <!--      v-if="selectedActive?.coinGeckoId"-->
-    <!--      v-model:amount="amount"-->
-    <!--      v-model:stacking-percentage="stackingPercentage"-->
-    <!--    />-->
+    <CryptoAddForm v-if="addCurrencyStore.selectedActive?.coinGeckoId" />
 
     <button @click="addCurrency">Add currency</button>
   </div>
@@ -15,7 +11,8 @@ import type { ICryptoPayload } from "~/services/transactions/transactions.types"
 
 import { useAuthStore } from "~/store/auth.store";
 import ActiveSearchBar from "~/layers/Portfolio/components/ActiveSearchBar/ActiveSearchBar.vue";
-// import CryptoAddForm from "~/layers/Portfolio/components/CryptoAddForm/CryptoAddForm.vue";
+import CryptoAddForm from "~/layers/Portfolio/components/CryptoAddForm/CryptoAddForm.vue";
+import { useAddCurrencyStore } from "~/layers/Portfolio/store/addCurrency.store";
 
 const addCurrency = async () => {
   const payload: ICryptoPayload = {
@@ -40,7 +37,7 @@ const addCurrency = async () => {
 };
 
 const authStore = useAuthStore();
-
+const addCurrencyStore = useAddCurrencyStore();
 onBeforeMount(async () => {
   if (authStore.isAuth && !authStore.user) {
     await authStore.getMe();

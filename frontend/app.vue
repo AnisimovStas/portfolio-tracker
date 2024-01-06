@@ -22,6 +22,17 @@ body {
   color: black;
   background: whitesmoke;
 }
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  margin: 0;
+  appearance: none;
+}
+
+/* Firefox */
+input[type="number"] {
+  appearance: textfield;
+}
 </style>
 
 <style src="assets/Colors.css" />

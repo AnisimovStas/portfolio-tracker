@@ -1,67 +1,10 @@
 <template>
-  <div class="container">
-    <div class="header">
-      <div class="header--left-size">
-        <p class="header--logo" @click="navigateHandler">Портфолио</p>
-      </div>
-      <Miniprofile />
-    </div>
+  <BaseLayout>
     <TabsSwitcher />
-
-    <slot class="slot" />
-    <div class="footer">футер с инфой</div>
-  </div>
+    <slot />
+  </BaseLayout>
 </template>
 <script setup lang="ts">
-import { useAuthStore } from "~/store/auth.store";
 import TabsSwitcher from "~/layers/Portfolio/components/TabsSwitcher/TabsSwitcher.vue";
-
-const authStore = useAuthStore();
-
-const navigateHandler = () =>
-  authStore.isAuth ? navigateTo("/profile") : navigateTo("/");
+import BaseLayout from "~/components/BaseLayout/BaseLayout.vue";
 </script>
-<style scoped>
-.container {
-  display: flex;
-  flex-direction: column;
-}
-
-.header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  height: 90px;
-  min-height: 100%;
-  padding: 10px;
-  background: var(--black);
-}
-
-.header--left-size {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 140px;
-  height: 70px;
-}
-
-.header--logo {
-  font-size: 24px;
-  font-weight: 700;
-  color: var(--white);
-  cursor: pointer;
-}
-
-.slot {
-  display: flex;
-}
-
-.footer {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 90px;
-  color: var(--white);
-  background: var(--black);
-}
-</style>

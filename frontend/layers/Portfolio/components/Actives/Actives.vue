@@ -1,10 +1,14 @@
 <template>
-  <div class="container">
+  <div class="actives__container">
     <div class="actives__header">
       <div class="header__title">Хеддер блока с активами</div>
-      <button @click="navigateTo('/profile/addCurrency')">
+      <UButton
+        color="white"
+        variant="solid"
+        @click="navigateTo('/profile/addCurrency')"
+      >
         Добавить актив
-      </button>
+      </UButton>
     </div>
     <div class="active__block">
       Блок с криптовалютами
@@ -27,7 +31,7 @@ import Active from "~/layers/Portfolio/components/Active/Active.vue";
 const portfolioStore = usePortfolioStore();
 </script>
 <style scoped>
-.container {
+.actives__container {
   display: flex;
   flex-direction: column;
   gap: var(--gap-s);

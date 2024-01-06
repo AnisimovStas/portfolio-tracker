@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div class="miniprofile__container">
     <div v-if="!authStore.isAuth" class="auth-block">
       <p class="auth-text">Войдите:</p>
       <div class="auth-methods">
@@ -30,7 +30,7 @@ import { useAuthStore } from "~/store/auth.store";
 const authStore = useAuthStore();
 </script>
 <style scoped>
-.container {
+.miniprofile__container {
   display: flex;
   align-items: center;
   justify-content: center;

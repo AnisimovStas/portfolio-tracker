@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div class="p-2 page__container">
     <div v-if="!portfolioStore.isPortfolioEmpty">
       <GeneralInfo />
       <Actives />
@@ -34,13 +34,6 @@ const createPortfolio = async () => {
 </script>
 
 <style scoped>
-.container {
-  display: flex;
-  flex-direction: column;
-  gap: var(--gap-s);
-  width: 100%;
-}
-
 .empty-portfolio {
   display: flex;
   flex-direction: column;

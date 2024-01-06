@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div class="page__container">
     <h1>Добро пожаловать в портфолио!</h1>
     <h1>
       Lorem ipsum dolor sit amet, consectetur adipisicing elit. Cum dolorem,
@@ -41,11 +41,12 @@ onBeforeMount(async () => {
 });
 </script>
 <style scoped>
-.container {
+.page__container {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
   height: 100%;
+  padding: var(--gap-s);
 }
 </style>

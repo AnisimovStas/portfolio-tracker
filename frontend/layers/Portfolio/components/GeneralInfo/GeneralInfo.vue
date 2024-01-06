@@ -1,11 +1,11 @@
 <template>
-  <div class="container">
+  <div class="general-info__container">
     <div class="general__info">Блок с информацией о портфеле</div>
     <div class="general__chart">График портфеля</div>
   </div>
 </template>
 <style scoped>
-.container {
+.general-info__container {
   display: flex;
   flex-direction: column;
   gap: var(--gap-s);

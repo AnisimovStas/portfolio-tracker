@@ -7,6 +7,7 @@
       placeholder="Найти актив"
       option-attribute="name"
       by="id"
+      autofocus
     />
   </div>
 </template>
@@ -38,6 +39,5 @@ async function search(query: string) {
 <style scoped>
 .active__searchbar {
   width: 300px;
-  height: 300px;
 }
 </style>
