@@ -14,6 +14,7 @@ export interface IPortfolioCryptoRow {
   icon: string;
   id: number;
   name: string;
+  portfolioRowId: number;
   profit: number;
   profitPercentage: string;
   stackingPercentage: number;

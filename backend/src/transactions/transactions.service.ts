@@ -78,10 +78,6 @@ export class TransactionsService {
         stackingPercentage,
       );
 
-      if (transaction.ticker === 'usdt') {
-        console.log(stacked);
-      }
-
       if (transaction.transactionType === 'sell') {
         totalStackedAmount -= stacked; // remove potentially profit
         totalAmount -= Number(transaction.amount);

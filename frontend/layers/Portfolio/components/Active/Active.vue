@@ -58,13 +58,13 @@
               {{ percentOfTotalPortfolio }}
             </p>
             <p>% от {{ percentOfTotalBlock }}</p>
-            <p>Находится в портфеле с {{ active.transactions[0].date }}</p>
-            <p>Средняя цена покупки {{ active.averagePrice }} $</p>
+            <p>Находится в портфеле с: {{ active.transactions[0].date }}</p>
+            <p>Средняя цена покупки: {{ active.averagePrice }} $</p>
             <p v-if="active.stackingPercentage > 0">
-              Процент стейкинга {{ active.stackingPercentage }} %
+              Процент стейкинга: {{ active.stackingPercentage }} %
             </p>
             <p v-if="active.stackingPercentage > 0">
-              Получено от стейкинга {{ active.totalStackedAmount }}
+              Получено от стейкинга: {{ active.totalStackedAmount }}
               {{ active.ticker.toUpperCase() }} ||
               {{ active.totalStackedInFiat }} $
             </p>
@@ -88,6 +88,7 @@
 </template>
 <script setup lang="ts">
 // TODO Добавить анимацию, чтобы красиво изменялась высота контейнера
+import { $fetch } from "ofetch";
 import type { IActiveTypesProps } from "~/layers/Portfolio/components/Active/Active.types";
 import { usePortfolioStore } from "~/layers/Portfolio/store/Portfolio.store";
 
@@ -129,9 +130,18 @@ const txTableRowsTranslated = computed(() => {
   });
 });
 
-const descriptionHandler = () => {
+const descriptionHandler = async () => {
   if (isDescriptionChanged.value) {
-    // TODO Запрос на изменение описания
+    await $fetch("http://localhost:9229/api/portfolios/update-description", {
+      body: {
+        newDescription: modifiedDescription.value,
+        portfolioRowId: props.active.portfolioRowId,
+      },
+      headers: {
+        Authorization: `Bearer ${useCookie("authorization").value}`,
+      },
+      method: "PUT",
+    });
   }
 };
 

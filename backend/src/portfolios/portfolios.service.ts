@@ -8,6 +8,7 @@ import { PortfolioCryptoRow } from './Entity/PortfolioCryptoRow.entity';
 import { CreateRowDto } from './dto/create-row.dto';
 import { TransactionsService } from '../transactions/transactions.service';
 import { CurrenciesService } from '../currencies/currencies.service';
+import { editDescriptionDto } from './dto/edit-description.dto';
 
 @Injectable()
 export class PortfoliosService {
@@ -36,49 +37,53 @@ export class PortfoliosService {
       },
     });
 
-    const modifiedCrypto = portfolio.crypto.map((currency) => {
-      const {
-        totalAmount,
-        totalPrice,
-        totalAveragePrice,
-        averagePrice,
-        totalStackedAmount,
-        totalStackedInFiat,
-        profit,
-        profitPercentage,
-      } = this.transactionService.getTotalInfo(
-        currency.transactions,
-        currency.stackingPercentage,
-      );
-      const { cryptoData } = currency.transactions[0];
+    const modifiedCrypto = portfolio.crypto
+      .map((currency) => {
+        const {
+          totalAmount,
+          totalPrice,
+          totalAveragePrice,
+          averagePrice,
+          totalStackedAmount,
+          totalStackedInFiat,
+          profit,
+          profitPercentage,
+        } = this.transactionService.getTotalInfo(
+          currency.transactions,
+          currency.stackingPercentage,
+        );
+        const { cryptoData } = currency.transactions[0];
 
-      const transactionsWithFilteredFields = currency.transactions.map((tx) => {
+        const transactionsWithFilteredFields = currency.transactions.map(
+          (tx) => {
+            return {
+              id: tx.id,
+              ticker: tx.ticker,
+              transactionType: tx.transactionType,
+              amount: tx.amount,
+              priceAtDate: tx.priceAtDate,
+              date: tx.date,
+            };
+          },
+        );
+
         return {
-          id: tx.id,
-          ticker: tx.ticker,
-          transactionType: tx.transactionType,
-          amount: tx.amount,
-          priceAtDate: tx.priceAtDate,
-          date: tx.date,
+          ...cryptoData,
+          transactions: transactionsWithFilteredFields,
+          stackingPercentage: currency.stackingPercentage,
+          description: currency.description,
+          PortfolioRowId: currency.id,
+          totalAmount,
+          totalPrice,
+          averagePrice,
+          totalStackedAmount,
+          totalStackedInFiat,
+          totalAveragePrice,
+          profit,
+          profitPercentage,
         };
-      });
-
-      return {
-        ...cryptoData,
-        transactions: transactionsWithFilteredFields,
-        stackingPercentage: currency.stackingPercentage,
-        description: currency.description,
-        id: currency.id,
-        totalAmount,
-        totalPrice,
-        averagePrice,
-        totalStackedAmount,
-        totalStackedInFiat,
-        totalAveragePrice,
-        profit,
-        profitPercentage,
-      };
-    });
+      })
+      .sort((a, b) => b.totalPrice - a.totalPrice);
 
     const modifiedPortfolio = {
       ...portfolio,
@@ -153,22 +158,21 @@ export class PortfoliosService {
     return portfolio;
   }
 
-  // async getUserTransactions(userId: string) {
-  //   const transactions = await this.transactionRepository.find({
-  //     where: { userId },
-  //   });
-  //   return transactions;
-  //
-  //   if (transactions.length > 0) {
-  //     const TickersArray = transactions
-  //       .map((transaction) => transaction.ticker.toLowerCase())
-  //       .filter((value, index, self) => self.indexOf(value) === index);
-  //     const cryptoList = await this.cryptoRepository.findBy({
-  //       ticker: In(TickersArray),
-  //     });
-  //     return { txData: transactions, coinInfo: cryptoList };
-  //   }
-  //
-  //   return [];
-  // }
+  async editRowDescription(payload: editDescriptionDto) {
+    const { portfolioRowId, newDescription } = payload;
+    const portfolioRow = await this.portfolioCryptoRowRepository.findOneBy({
+      id: portfolioRowId,
+    });
+
+    if (!portfolioRow) {
+      throw new HttpException('Portfolio row not found', HttpStatus.NOT_FOUND);
+    }
+
+    portfolioRow.description = newDescription;
+
+    console.log(portfolioRow);
+    await this.portfolioCryptoRowRepository.save(portfolioRow);
+
+    return { msg: 'description updated' };
+  }
 }

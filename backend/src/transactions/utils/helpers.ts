@@ -25,7 +25,7 @@ export const trimByValue = (value: number): number => {
   }
 
   if (value >= 0) {
-    return +value;
+    return +value.toFixed(3);
   }
 
   if (value < 0) {

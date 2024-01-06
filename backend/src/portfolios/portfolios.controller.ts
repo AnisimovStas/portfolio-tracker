@@ -1,8 +1,17 @@
-import { Body, Controller, Get, Post, Req, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Post,
+  Put,
+  Req,
+  UseGuards,
+} from '@nestjs/common';
 import { PortfoliosService } from './portfolios.service';
 import { AuthGuard } from '@nestjs/passport';
 import { Request } from 'express';
 import { CreateRowDto } from './dto/create-row.dto';
+import { editDescriptionDto } from './dto/edit-description.dto';
 
 @Controller('portfolios')
 export class PortfoliosController {
@@ -26,9 +35,9 @@ export class PortfoliosController {
     return this.portfoliosService.createPortfolio(request.user['id']);
   }
 
-  // @UseGuards(AuthGuard('jwt'))
-  // @Get('actives')
-  // async getActives(@Req() request: Request) {
-  //   return this.portfoliosService.getUserTransactions(request.user['id']);
-  // }
+  @UseGuards(AuthGuard('jwt'))
+  @Put('update-description')
+  async updateDescription(@Body() payload: editDescriptionDto) {
+    return this.portfoliosService.editRowDescription(payload);
+  }
 }
