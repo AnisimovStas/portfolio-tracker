@@ -10,7 +10,7 @@
         Добавить актив
       </UButton>
     </div>
-    <div class="active__block">
+    <div class="active__block p-2 gap-2">
       Блок с криптовалютами
 
       <Active
@@ -19,12 +19,13 @@
         :active="crypto"
       />
     </div>
-    <div class="active__block">Блок с ру акциями</div>
+    <div class="active__block gap-2">Блок с ру акциями</div>
     <div class="active__block">Блок с ру облигациями</div>
     <div class="active__block">Блок с фондами</div>
   </div>
 </template>
 <script setup lang="ts">
+// TODO Зафиксить ошибки в консоли
 import { usePortfolioStore } from "~/layers/Portfolio/store/Portfolio.store";
 import Active from "~/layers/Portfolio/components/Active/Active.vue";
 
@@ -58,7 +59,6 @@ const portfolioStore = usePortfolioStore();
   align-items: center;
   justify-content: center;
   width: 100%;
-  height: 300px;
   border: 1px solid;
 }
 </style>

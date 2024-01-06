@@ -24,7 +24,7 @@
     >
       <template #trailing>
         <span class="text-gray-500 dark:text-gray-400 text-xs">
-          {{ addCurrencyStore.selectedActive.ticker.toUpperCase() }}</span
+          {{ addCurrencyStore?.selectedActive?.ticker?.toUpperCase() }}</span
         >
       </template>
     </UInput>
