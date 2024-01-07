@@ -11,9 +11,12 @@ import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
 import { AuthModule } from './auth/auth.module';
 import { ScheduleModule } from '@nestjs/schedule';
+import { RuStocksModule } from './ru-stocks/ru-stocks.module';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
+    ConfigModule.forRoot(),
     TypeOrmModule.forRoot({
       type: 'postgres',
       host: '127.0.0.1',
@@ -34,6 +37,7 @@ import { ScheduleModule } from '@nestjs/schedule';
     }),
     AuthModule,
     ScheduleModule.forRoot(),
+    RuStocksModule,
   ],
   controllers: [AppController],
   providers: [AppService, ImageService],

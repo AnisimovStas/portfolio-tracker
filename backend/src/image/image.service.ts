@@ -9,9 +9,11 @@ export class ImageService {
 
     response.data.pipe(fs.createWriteStream(destinationPath));
 
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
       response.data.on('end', () => resolve());
-      response.data.on('error', (error) => reject(error));
+      // response.data.on('error', (error) => reject(error));
+      // skip error
+      response.data.on('error', () => resolve());
     });
   }
 }

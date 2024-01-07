@@ -94,8 +94,6 @@ export class CurrenciesService {
       },
     });
 
-    console.log('we here');
-    console.log(cryptoObjects.length);
     cryptoObjects.forEach((crypto) => {
       const matchingData = updatedCryptos.find(
         (item) => item.coinGeckoId === crypto.coinGeckoId,
