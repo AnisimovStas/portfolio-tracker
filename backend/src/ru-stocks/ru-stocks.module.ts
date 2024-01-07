@@ -5,9 +5,10 @@ import { HttpModule } from '@nestjs/axios';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { RuStock } from './entities/ru-stocks.entity';
 import { ImageService } from '../image/image.service';
+import { Fiat } from '../currencies/entities/fiat.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([RuStock]), HttpModule],
+  imports: [TypeOrmModule.forFeature([RuStock, Fiat]), HttpModule],
   providers: [RuStocksService, ImageService],
   controllers: [RuStocksController],
 })

@@ -32,7 +32,7 @@ import { ConfigModule } from '@nestjs/config';
     CurrenciesModule,
     TransactionsModule,
     ServeStaticModule.forRoot({
-      rootPath: join(__dirname, '..', 'src', 'assets', 'crypto'),
+      rootPath: join(__dirname, '..', 'src', 'assets'),
       serveRoot: '/assets',
     }),
     AuthModule,

@@ -3,10 +3,13 @@ import { HttpService } from '@nestjs/axios';
 import { firstValueFrom } from 'rxjs';
 import { InjectRepository } from '@nestjs/typeorm';
 import { RuStock } from './entities/ru-stocks.entity';
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 import { nameTrimmer } from './utils/trimmer';
 import { ImageService } from '../image/image.service';
 import * as path from 'path';
+import * as fs from 'fs';
+import { Cron } from '@nestjs/schedule';
+import { Fiat } from '../currencies/entities/fiat.entity';
 
 @Injectable()
 export class RuStocksService {
@@ -15,6 +18,8 @@ export class RuStocksService {
     @InjectRepository(RuStock)
     private readonly ruStocksRepository: Repository<RuStock>,
     private readonly imageService: ImageService,
+    @InjectRepository(Fiat)
+    private readonly fiatRepository: Repository<Fiat>,
   ) {}
 
   async getRuStocksGeneralInfo(page: number) {
@@ -71,7 +76,8 @@ export class RuStocksService {
   async downloadRuStocksIconImages() {
     const ruStocks = await this.ruStocksRepository.find({
       take: 100,
-      skip: 0,
+      // нужно менять последний параметр при добавлении новых акции
+      skip: 900,
     });
 
     for (const stock of ruStocks) {
@@ -90,5 +96,87 @@ export class RuStocksService {
         console.log(error);
       }
     }
+  }
+
+  async mapRuStocksWithImages() {
+    const dir = path.join('src', 'assets', 'ruStocks');
+    const filelist = fs.readdirSync(dir);
+    const fileListWoDotPng = filelist.map((filename) => {
+      return filename.slice(0, -4);
+    });
+
+    const ruStocksThatHaveIcon = await this.ruStocksRepository.find({
+      where: {
+        ticker: In(fileListWoDotPng),
+      },
+    });
+
+    const newRuStocks = ruStocksThatHaveIcon.map((stock) => {
+      return {
+        ...stock,
+        icon: `/assets/ruStocks/${stock.ticker}.png`,
+      };
+    });
+
+    await this.ruStocksRepository.save(newRuStocks);
+    return { msg: 'icons mapped' };
+  }
+
+  async getAllRuStocks() {
+    const ruStocks = await this.ruStocksRepository.find();
+
+    return {
+      length: ruStocks.length,
+      ruStocks: ruStocks,
+    };
+  }
+
+  async getRuStockPriceData() {
+    const url = `https://iss.moex.com/iss/engines/stock/markets/shares/secstats.json`;
+
+    try {
+      const { data } = await firstValueFrom(
+        this.httpService.get(url, {
+          params: {
+            'iss.meta': 'off',
+            'iss.json': 'extended',
+          },
+        }),
+      );
+      return data[1].secstats.map((info) => {
+        return {
+          ticker: info['SECID'],
+          currentPrice: info['LAST'] || info['LCLOSEPRICE'] || info['LASTBID'],
+        };
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  @Cron('0 20/30 * * * *')
+  async updateRuStocksCurrentPrice() {
+    const ruStocks = await this.ruStocksRepository.find();
+    const usdPrice = await this.fiatRepository.findOne({
+      where: { name: 'USD' },
+    });
+    const priceData = await this.getRuStockPriceData();
+
+    const RuStocksWithUpdatedPrice = ruStocks.map((stock) => {
+      const updatedPrice = priceData.find((data) => {
+        return data.ticker === stock.ticker;
+      });
+      const currentPriceInUsd = (
+        updatedPrice?.currentPrice / +usdPrice.value
+      ).toFixed(5);
+      return {
+        ...stock,
+        currentPrice: currentPriceInUsd ?? '',
+      };
+    });
+
+    await this.ruStocksRepository.save(RuStocksWithUpdatedPrice);
+
+    return { msg: 'Ru stocks prices updated!' };
   }
 }

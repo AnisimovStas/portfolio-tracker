@@ -14,4 +14,19 @@ export class RuStocksController {
   async downloadIcons() {
     return this.ruStocksService.downloadRuStocksIconImages();
   }
+
+  @Get('map-icons')
+  async mapIcons() {
+    return this.ruStocksService.mapRuStocksWithImages();
+  }
+
+  @Get('all')
+  async getAll() {
+    return this.ruStocksService.getAllRuStocks();
+  }
+
+  // @Get('update-price')
+  // async updatePrice() {
+  //   return this.ruStocksService.updateRuStocksCurrentPrice();
+  // }
 }
