@@ -123,4 +123,17 @@ export class CryptotxService {
       profitPercentage,
     };
   }
+
+  async fixImageLinks() {
+    const crypto = await this.cryptoRepository.find();
+
+    const cryptoWithFixedLinks = crypto.map((c) => {
+      return {
+        ...c,
+        icon: c.icon.replace('/assets', '/assets/crypto'),
+      };
+    });
+
+    return await this.cryptoRepository.save(cryptoWithFixedLinks);
+  }
 }
