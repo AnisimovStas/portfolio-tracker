@@ -11,5 +11,6 @@ import { Fiat } from '../currencies/entities/fiat.entity';
   imports: [TypeOrmModule.forFeature([RuStock, Fiat]), HttpModule],
   providers: [RuStocksService, ImageService],
   controllers: [RuStocksController],
+  exports: [RuStocksService],
 })
 export class RuStocksModule {}

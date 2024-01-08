@@ -3,7 +3,7 @@ import { HttpService } from '@nestjs/axios';
 import { firstValueFrom } from 'rxjs';
 import { InjectRepository } from '@nestjs/typeorm';
 import { RuStock } from './entities/ru-stocks.entity';
-import { In, Repository } from 'typeorm';
+import { In, Like, Repository } from 'typeorm';
 import { nameTrimmer } from './utils/trimmer';
 import { ImageService } from '../image/image.service';
 import * as path from 'path';
@@ -178,5 +178,34 @@ export class RuStocksService {
     await this.ruStocksRepository.save(RuStocksWithUpdatedPrice);
 
     return { msg: 'Ru stocks prices updated!' };
+  }
+
+  public async getRuStocksBySearch(searchValue: string) {
+    if (!searchValue) {
+      return [];
+    }
+
+    const RegularSearch = searchValue;
+    const upperCaseSearch = searchValue.toUpperCase();
+    const lowerCaseSearch = searchValue.toLowerCase();
+
+    const ruStocks = await this.ruStocksRepository.find({
+      where: [
+        {
+          ticker: Like(`%${RegularSearch}%`),
+        },
+        { name: Like(`%${RegularSearch}%`) },
+        { ticker: Like(`%${upperCaseSearch}%`) },
+        { name: Like(`%${upperCaseSearch}%`) },
+        { ticker: Like(`%${lowerCaseSearch}%`) },
+        { name: Like(`%${lowerCaseSearch}%`) },
+      ],
+      take: 10,
+      order: {
+        id: 'ASC',
+      },
+    });
+
+    return ruStocks || [];
   }
 }

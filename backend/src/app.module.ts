@@ -15,6 +15,7 @@ import { RuStocksModule } from './ru-stocks/ru-stocks.module';
 import { ConfigModule } from '@nestjs/config';
 import { CryptotxModule } from './cryptotx/cryptotx.module';
 import { CryptoRowModule } from './crypto-row/crypto-row.module';
+import { SearchModule } from './search/search.module';
 
 @Module({
   imports: [
@@ -42,6 +43,7 @@ import { CryptoRowModule } from './crypto-row/crypto-row.module';
     RuStocksModule,
     CryptotxModule,
     CryptoRowModule,
+    SearchModule,
   ],
   controllers: [AppController],
   providers: [AppService, ImageService],

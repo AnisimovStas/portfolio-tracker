@@ -143,16 +143,26 @@ export class CurrenciesService {
       return [];
     }
 
+    const RegularSearch = search;
+    const upperCaseSearch = search.toUpperCase();
+    const lowerCaseSearch = search.toLowerCase();
+
     const cryptos = await this.cryptoRepository.find({
-      where: [{ name: Like(`%${search}%`) }, { ticker: Like(`%${search}%`) }],
+      where: [
+        { name: Like(`%${RegularSearch}%`) },
+        { ticker: Like(`%${RegularSearch}%`) },
+        { name: Like(`%${upperCaseSearch}%`) },
+        { ticker: Like(`%${upperCaseSearch}%`) },
+        { name: Like(`%${lowerCaseSearch}%`) },
+        { ticker: Like(`%${lowerCaseSearch}%`) },
+      ],
       take: 10,
+      order: {
+        id: 'ASC',
+      },
     });
 
-    if (cryptos) {
-      return cryptos;
-    } else {
-      return [];
-    }
+    return cryptos || [];
   }
 
   async updateFiatPrices() {

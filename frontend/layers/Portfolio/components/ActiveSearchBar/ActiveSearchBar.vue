@@ -12,7 +12,7 @@
   </div>
 </template>
 <script setup lang="ts">
-import type { ICrypto } from "~/layers/Portfolio/services/crypto/crypto.types";
+import type { ISearchResponse } from "~/layers/Portfolio/services/crypto/crypto.types";
 import { useAddCurrencyStore } from "~/layers/Portfolio/store/addCurrency.store";
 
 const addCurrencyStore = useAddCurrencyStore();
@@ -22,8 +22,8 @@ const loading = ref(false);
 async function search(query: string) {
   loading.value = true;
 
-  const actives = await $fetch<ICrypto>(
-    `http://localhost:9229/api/currencies/crypto/list/search`,
+  const actives = await $fetch<ISearchResponse>(
+    `http://localhost:9229/api/search/currencies`,
     {
       query: {
         search: query,
@@ -31,8 +31,25 @@ async function search(query: string) {
     },
   );
 
+  const modifiedCrypto = actives.crypto.map((crypto) => {
+    return {
+      ...crypto,
+      currencyType: "crypto",
+    };
+  });
+
+  const modifiedRuStocks = actives.ruStocks.map((ruStocks) => {
+    return {
+      ...ruStocks,
+      currencyType: "ruStocks",
+    };
+  });
+
+  const mappedActives = [...modifiedCrypto, ...modifiedRuStocks].sort(
+    (a, b) => a.id - b.id,
+  );
   loading.value = false;
-  return actives;
+  return mappedActives;
 }
 </script>
 
