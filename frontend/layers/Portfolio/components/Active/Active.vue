@@ -136,6 +136,7 @@ const descriptionHandler = async () => {
       body: {
         newDescription: modifiedDescription.value,
         portfolioRowId: props.active.portfolioRowId,
+        rowType: props.blockType,
       },
       headers: {
         Authorization: `Bearer ${useCookie("authorization").value}`,

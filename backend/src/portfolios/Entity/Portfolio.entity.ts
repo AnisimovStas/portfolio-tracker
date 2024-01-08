@@ -1,5 +1,5 @@
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
-import { PortfolioCryptoRow } from './PortfolioCryptoRow.entity';
+import { CryptoRow } from '../../crypto-row/entity/cryptoRow.entity';
 
 @Entity()
 export class Portfolio {
@@ -9,6 +9,6 @@ export class Portfolio {
   @Column()
   userId: string;
 
-  @OneToMany(() => PortfolioCryptoRow, (crypto) => crypto.portfolio)
-  crypto: PortfolioCryptoRow[];
+  @OneToMany(() => CryptoRow, (crypto) => crypto.portfolio)
+  crypto: CryptoRow[];
 }

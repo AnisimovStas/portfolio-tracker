@@ -10,8 +10,8 @@ import {
 import { PortfoliosService } from './portfolios.service';
 import { AuthGuard } from '@nestjs/passport';
 import { Request } from 'express';
-import { CreateRowDto } from './dto/create-row.dto';
 import { editDescriptionDto } from './dto/edit-description.dto';
+import { TCreateRowDto } from './dto/create-row.dto';
 
 @Controller('portfolios')
 export class PortfoliosController {
@@ -25,7 +25,7 @@ export class PortfoliosController {
 
   @UseGuards(AuthGuard('jwt'))
   @Post('addCurrency')
-  async addCurrency(@Req() request: Request, @Body() payload: CreateRowDto) {
+  async addCurrency(@Req() request: Request, @Body() payload: TCreateRowDto) {
     return this.portfoliosService.addCurrency(request.user['id'], payload);
   }
 

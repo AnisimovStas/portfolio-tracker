@@ -13,6 +13,8 @@ import { AuthModule } from './auth/auth.module';
 import { ScheduleModule } from '@nestjs/schedule';
 import { RuStocksModule } from './ru-stocks/ru-stocks.module';
 import { ConfigModule } from '@nestjs/config';
+import { CryptotxModule } from './cryptotx/cryptotx.module';
+import { CryptoRowModule } from './crypto-row/crypto-row.module';
 
 @Module({
   imports: [
@@ -38,6 +40,8 @@ import { ConfigModule } from '@nestjs/config';
     AuthModule,
     ScheduleModule.forRoot(),
     RuStocksModule,
+    CryptotxModule,
+    CryptoRowModule,
   ],
   controllers: [AppController],
   providers: [AppService, ImageService],

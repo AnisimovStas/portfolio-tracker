@@ -1,3 +1,5 @@
+import type { TCurrencyType } from "~/services/transactions/transactions.types";
+
 export interface ICryptoRowTransaction {
   amount: number;
   date: Date;

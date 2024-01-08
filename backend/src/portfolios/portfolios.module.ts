@@ -12,6 +12,10 @@ import { TransactionsService } from '../transactions/transactions.service';
 import { CurrenciesService } from '../currencies/currencies.service';
 import { ImageService } from '../image/image.service';
 import { HttpModule } from '@nestjs/axios';
+import { CryptoRowService } from '../crypto-row/crypto-row.service';
+import { CryptoRow } from '../crypto-row/entity/cryptoRow.entity';
+import { CryptotxService } from '../cryptotx/cryptotx.service';
+import { CryptoTx } from '../cryptotx/entity/cryptoTx.entity';
 
 @Module({
   imports: [
@@ -22,6 +26,8 @@ import { HttpModule } from '@nestjs/axios';
       Fiat,
       Portfolio,
       PortfolioCryptoRow,
+      CryptoRow,
+      CryptoTx,
     ]),
     HttpModule,
   ],
@@ -30,6 +36,8 @@ import { HttpModule } from '@nestjs/axios';
     TransactionsService,
     CurrenciesService,
     ImageService,
+    CryptoRowService,
+    CryptotxService,
   ],
   controllers: [PortfoliosController],
 })
