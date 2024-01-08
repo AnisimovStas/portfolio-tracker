@@ -1,7 +1,6 @@
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { TTransaction } from '../../transactions/dto/create-transaction.dto';
 import { Crypto } from '../../currencies/entities/crypto.entity';
-import { PortfolioCryptoRow } from '../../portfolios/Entity/PortfolioCryptoRow.entity';
 import { CryptoRow } from '../../crypto-row/entity/cryptoRow.entity';
 
 @Entity()

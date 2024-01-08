@@ -106,7 +106,6 @@ export class CryptoRowService {
 
     cryptoRow.description = newDescription;
 
-    console.log('new crypto row', cryptoRow);
     await this.cryptoRowRepository.save(cryptoRow);
   }
 }
