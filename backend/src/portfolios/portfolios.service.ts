@@ -36,8 +36,16 @@ export class PortfoliosService {
   async addCurrency(userId: string, payload: TCreateRowDto) {
     const { currencyType } = payload;
 
+    const portfolio = await this.portfolioRepository.findOne({
+      where: { userId },
+    });
+
     if (currencyType === 'crypto') {
-      return this.cryptoRowService.addCryptoCurrency(userId, payload);
+      return this.cryptoRowService.addCryptoCurrency(
+        userId,
+        payload,
+        portfolio.id,
+      );
     }
   }
   async createPortfolio(userId: string) {

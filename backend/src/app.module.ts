@@ -5,7 +5,6 @@ import { UsersModule } from './users/users.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { PortfoliosModule } from './portfolios/portfolios.module';
 import { CurrenciesModule } from './currencies/currencies.module';
-import { TransactionsModule } from './transactions/transactions.module';
 import { ImageService } from './image/image.service';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
@@ -33,7 +32,6 @@ import { SearchModule } from './search/search.module';
     UsersModule,
     PortfoliosModule,
     CurrenciesModule,
-    TransactionsModule,
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '..', 'src', 'assets'),
       serveRoot: '/assets',

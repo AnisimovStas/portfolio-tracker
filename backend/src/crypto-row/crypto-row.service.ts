@@ -3,7 +3,6 @@ import { CreateCryptoRowDto } from '../portfolios/dto/create-row.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CryptoRow } from './entity/cryptoRow.entity';
 import { Repository } from 'typeorm';
-import { Portfolio } from '../portfolios/Entity/Portfolio.entity';
 import { CryptotxService } from '../cryptotx/cryptotx.service';
 
 @Injectable()
@@ -11,11 +10,13 @@ export class CryptoRowService {
   constructor(
     @InjectRepository(CryptoRow)
     private readonly cryptoRowRepository: Repository<CryptoRow>,
-    @InjectRepository(Portfolio)
-    private readonly portfolioRepository: Repository<Portfolio>,
     private readonly cryptoTxService: CryptotxService,
   ) {}
-  public async addCryptoCurrency(userId: string, payload: CreateCryptoRowDto) {
+  public async addCryptoCurrency(
+    userId: string,
+    payload: CreateCryptoRowDto,
+    portfolioId: number,
+  ) {
     const cryptoRow = await this.cryptoRowRepository.findOne({
       where: { userId: userId, ticker: payload.ticker },
     });
@@ -30,11 +31,7 @@ export class CryptoRowService {
 
       const newCryptoRow = new CryptoRow();
 
-      const portfolio = await this.portfolioRepository.findOne({
-        where: { userId: userId },
-      });
-
-      newCryptoRow.portfolio = portfolio.id;
+      newCryptoRow.portfolio = portfolioId;
       newCryptoRow.userId = userId;
       newCryptoRow.ticker = payload.ticker;
       newCryptoRow.stackingPercentage = payload.stackingPercentage;

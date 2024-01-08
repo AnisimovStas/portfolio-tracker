@@ -6,9 +6,7 @@ export const calculateDaysDifference = (dateString: string): number => {
 
   const timeDifference = currentDate.getTime() - specifiedDate.getTime();
 
-  const daysDifference = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
-
-  return daysDifference;
+  return Math.floor(timeDifference / (1000 * 60 * 60 * 24));
 };
 
 export const trimByValue = (value: number): number => {

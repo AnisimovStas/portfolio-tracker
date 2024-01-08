@@ -4,7 +4,5 @@ export const nameTrimmer = (name: string) => {
     '',
   );
 
-  const trimmedName = nameWoCompanyPrefix.replace(/[\\"]/g, '').trim();
-
-  return trimmedName;
+  return nameWoCompanyPrefix.replace(/[\\"]/g, '').trim();
 };
