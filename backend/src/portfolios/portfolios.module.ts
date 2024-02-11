@@ -4,10 +4,11 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { PortfoliosController } from './portfolios.controller';
 import { Portfolio } from './Entity/Portfolio.entity';
 import { CryptoRowModule } from '../crypto-row/crypto-row.module';
+import { PortfoliosRepository } from './portfolios.repository';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Portfolio]), CryptoRowModule],
-  providers: [PortfoliosService],
+  providers: [PortfoliosService, PortfoliosRepository],
   controllers: [PortfoliosController],
   exports: [PortfoliosService],
 })

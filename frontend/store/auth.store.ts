@@ -12,16 +12,13 @@ export const useAuthStore = defineStore("global/auth", () => {
     data: user,
     pending: isLoading,
     error,
-    refresh,
+    execute: getMe,
   } = useFetch<IUser>("/api/auth/getMe", {
     headers: {
       Authorization: `Bearer ${isAuthCookie.value}`,
     },
+    immediate: false,
   });
-
-  const getMe = async () => {
-    await refresh();
-  };
 
   watch(
     () => error.value,
@@ -32,8 +29,7 @@ export const useAuthStore = defineStore("global/auth", () => {
     },
   );
 
-  const logout = async () => {
-    await $fetch("/api/auth/logout", { method: "DELETE" });
+  const logout = () => {
     isAuthCookie.value = null;
     user.value = null;
     navigateTo("/");
