@@ -130,7 +130,7 @@ export class CryptotxService {
     const cryptoWithFixedLinks = crypto.map((c) => {
       return {
         ...c,
-        icon: c.icon.replace('/assets', '/assets/crypto'),
+        icon: c.icon.replace('/img', '/img/crypto'),
       };
     });
 

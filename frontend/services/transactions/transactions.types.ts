@@ -1,5 +1,8 @@
-export type TTransaction = "buy" | "sell";
 export type TCurrencyType = "fiat" | "crypto";
+export enum TRANSACTION_TYPE {
+  BUY = "buy",
+  SELL = "sell",
+}
 
 export interface ICryptoPayload {
   amount: string;
@@ -8,5 +11,5 @@ export interface ICryptoPayload {
   description: string;
   stackingPercentage: string;
   ticker: string;
-  transactionType: TTransaction;
+  transactionType: TRANSACTION_TYPE;
 }

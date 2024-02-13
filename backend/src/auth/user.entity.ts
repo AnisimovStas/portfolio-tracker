@@ -1,5 +1,5 @@
-import { Column, Entity, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
-import { Portfolio } from '../portfolios/Entity/Portfolio.entity';
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Transaction } from '../transactions/transaction.entity';
 
 @Entity('users')
 export class User {
@@ -12,6 +12,6 @@ export class User {
   @Column()
   displayName: string;
 
-  @OneToOne(() => Portfolio, (portfolio) => portfolio.user, { eager: false })
-  portfolio: Portfolio;
+  @OneToMany(() => Transaction, (transaction) => transaction.user)
+  transactions: Transaction[];
 }
