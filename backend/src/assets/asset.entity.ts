@@ -5,7 +5,7 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { AssetType } from './types/assets.types';
+import { ASSET_TYPE } from './types/assets.types';
 import { Transaction } from '../transactions/transaction.entity';
 import { AssetHistoricalPrice } from './asset-historical-price.entity';
 
@@ -15,7 +15,7 @@ export class Asset {
   id: number;
 
   @Column()
-  type: AssetType;
+  type: ASSET_TYPE;
 
   @Column({ nullable: true })
   coinGeckoId: string;
@@ -36,8 +36,8 @@ export class Asset {
   @Column()
   icon: string;
 
-  @Column()
-  currentPrice: string;
+  @Column({ type: 'float' })
+  currentPrice: number;
 
   @UpdateDateColumn()
   updatedAt: Date;

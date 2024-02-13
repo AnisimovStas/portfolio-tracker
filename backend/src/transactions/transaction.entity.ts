@@ -1,30 +1,34 @@
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
-import { TTransaction } from './dto/create-transaction.dto';
 import { Asset } from '../assets/asset.entity';
+import { User } from '../auth/user.entity';
+import { TRANSACTION_TYPE } from './types/transactions.types';
 
 @Entity()
 export class Transaction {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
-  amount: string;
+  @Column({ type: 'float' })
+  amount: number;
 
   @Column()
-  transactionType: TTransaction;
+  transactionType: TRANSACTION_TYPE;
 
   @Column()
-  date: string;
+  date: Date;
 
-  @Column()
-  priceAtDate: string;
+  @Column({ type: 'float' })
+  priceAtDate: number;
+
+  @Column({ nullable: true, type: 'float' })
+  stackingPercentage: number | null;
 
   @Column({ nullable: true })
-  stackingPercentage: string;
-
-  @Column({ default: '' })
   description: string;
 
   @ManyToOne(() => Asset, (asset) => asset.transactions)
   asset: Asset;
+
+  @ManyToOne(() => User, (user) => user.transactions)
+  user: User;
 }

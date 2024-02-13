@@ -3,8 +3,6 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { editDescriptionDto } from './dto/edit-description.dto';
 import { CryptoRowService } from '../crypto-row/crypto-row.service';
 import { PortfoliosRepository } from './portfolios.repository';
-import { User } from '../auth/user.entity';
-import { Portfolio } from './Entity/Portfolio.entity';
 
 @Injectable()
 export class PortfoliosService {
