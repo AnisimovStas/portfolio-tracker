@@ -48,9 +48,9 @@ export class PortfoliosService {
   //     );
   //   }
   // }
-  async createPortfolio(user: User): Promise<Portfolio> {
-    return this.portfolioRepository.createPortfolio(user);
-  }
+  // async createPortfolio(user: User): Promise<Portfolio> {
+  //   return this.portfolioRepository.createPortfolio(user);
+  // }
 
   async editRowDescription(payload: editDescriptionDto) {
     const { portfolioRowId, newDescription, rowType } = payload;

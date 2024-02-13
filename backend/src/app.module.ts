@@ -2,18 +2,14 @@ import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { PortfoliosModule } from './portfolios/portfolios.module';
-import { CurrenciesModule } from './currencies/currencies.module';
 import { ImageService } from './image/image.service';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
 import { AuthModule } from './auth/auth.module';
 import { ScheduleModule } from '@nestjs/schedule';
-import { RuStocksModule } from './ru-stocks/ru-stocks.module';
 import { ConfigModule } from '@nestjs/config';
-import { CryptotxModule } from './cryptotx/cryptotx.module';
-import { CryptoRowModule } from './crypto-row/crypto-row.module';
-import { SearchModule } from './search/search.module';
+import { TransactionsModule } from './transactions/transactions.module';
+import { AssetsModule } from './assets/assets.module';
 
 @Module({
   imports: [
@@ -28,18 +24,14 @@ import { SearchModule } from './search/search.module';
       autoLoadEntities: true,
       synchronize: true,
     }),
-    PortfoliosModule,
-    CurrenciesModule,
     ServeStaticModule.forRoot({
-      rootPath: join(__dirname, '..', 'src', 'assets'),
-      serveRoot: '/assets',
+      rootPath: join(__dirname, '..', 'src', 'img'),
+      serveRoot: '/img',
     }),
     AuthModule,
     ScheduleModule.forRoot(),
-    RuStocksModule,
-    CryptotxModule,
-    CryptoRowModule,
-    SearchModule,
+    TransactionsModule,
+    AssetsModule,
   ],
   controllers: [AppController],
   providers: [AppService, ImageService],

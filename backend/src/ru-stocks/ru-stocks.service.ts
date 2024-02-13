@@ -83,12 +83,7 @@ export class RuStocksService {
     for (const stock of ruStocks) {
       const imageUrl = `https://invest-brands.cdn-tinkoff.ru/${stock.isin}x640.png`;
       const imageName = `${stock.ticker}.png`;
-      const imageNameWithPath = path.join(
-        'src',
-        'assets',
-        'ruStocks',
-        imageName,
-      );
+      const imageNameWithPath = path.join('src', 'img', 'ruStocks', imageName);
 
       try {
         await this.imageService.downloadImage(imageUrl, imageNameWithPath);
@@ -99,7 +94,7 @@ export class RuStocksService {
   }
 
   async mapRuStocksWithImages() {
-    const dir = path.join('src', 'assets', 'ruStocks');
+    const dir = path.join('src', 'img', 'ruStocks');
     const filelist = fs.readdirSync(dir);
     const fileListWoDotPng = filelist.map((filename) => {
       return filename.slice(0, -4);
@@ -114,7 +109,7 @@ export class RuStocksService {
     const newRuStocks = ruStocksThatHaveIcon.map((stock) => {
       return {
         ...stock,
-        icon: `/assets/ruStocks/${stock.ticker}.png`,
+        icon: `/img/ruStocks/${stock.ticker}.png`,
       };
     });
 

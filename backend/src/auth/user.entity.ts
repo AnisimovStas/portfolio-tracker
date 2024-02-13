@@ -11,7 +11,4 @@ export class User {
 
   @Column()
   displayName: string;
-
-  @OneToOne(() => Portfolio, (portfolio) => portfolio.user, { eager: false })
-  portfolio: Portfolio;
 }

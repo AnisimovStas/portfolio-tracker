@@ -5,7 +5,7 @@ import { CryptoRow } from './entity/cryptoRow.entity';
 import { CryptotxModule } from '../cryptotx/cryptotx.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([CryptoRow]), CryptotxModule],
+  imports: [CryptotxModule],
   providers: [CryptoRowService],
   exports: [CryptoRowService],
 })

@@ -26,7 +26,7 @@ export class CurrenciesService {
     for (const coin of coins) {
       const imageUrl = coin.image;
       const imageName = `${coin.id}.png`;
-      const imageNameWithPath = path.join('src', 'assets', 'crypto', imageName);
+      const imageNameWithPath = path.join('src', 'img', 'crypto', imageName);
 
       await this.imageService.downloadImage(imageUrl, imageNameWithPath);
     }
@@ -52,7 +52,7 @@ export class CurrenciesService {
         coinGeckoId: crypto.id,
         name: crypto.name,
         ticker: crypto.symbol,
-        icon: '/assets/' + crypto.id + '.png',
+        icon: '/img/' + crypto.id + '.png',
         currentPrice: crypto.current_price,
       };
     });

@@ -7,7 +7,7 @@ import { CryptoRowModule } from '../crypto-row/crypto-row.module';
 import { PortfoliosRepository } from './portfolios.repository';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Portfolio]), CryptoRowModule],
+  imports: [CryptoRowModule],
   providers: [PortfoliosService, PortfoliosRepository],
   controllers: [PortfoliosController],
   exports: [PortfoliosService],
