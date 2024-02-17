@@ -46,6 +46,11 @@ export class TransactionsService {
   ): Promise<Transaction> {
     const { ticker, assetType } = createCryptoTxDto;
 
+    await this.transactionsRepository.transactionValidator(
+      user,
+      createCryptoTxDto,
+    );
+
     const cryptoInfo: Asset = await this.assetsService.getAssetByTickerAndType(
       ticker,
       assetType,
