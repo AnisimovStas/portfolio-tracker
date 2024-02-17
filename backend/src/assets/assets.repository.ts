@@ -1,7 +1,13 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  UnprocessableEntityException,
+} from '@nestjs/common';
 import { DataSource, Repository } from 'typeorm';
 import { Asset } from './asset.entity';
 import { ASSET_TYPE } from './types/assets.types';
+import { User } from '../auth/user.entity';
+import { Transaction } from '../transactions/transaction.entity';
 
 @Injectable()
 export class AssetsRepository extends Repository<Asset> {
@@ -23,5 +29,34 @@ export class AssetsRepository extends Repository<Asset> {
       );
     }
     return asset;
+  }
+
+  async getUserCrypto(user: User): Promise<Asset[]> {
+    const query = this.createQueryBuilder('asset');
+
+    query.select([
+      'asset.coinGeckoId',
+      'asset.name',
+      'asset.ticker',
+      'asset.icon',
+      'asset.currentPrice',
+    ]);
+
+    query.leftJoinAndMapMany(
+      'asset.transactions',
+      Transaction,
+      'transactions',
+      'asset.id = transactions.assetId',
+    );
+
+    query.where('transactions.user = :user', { user: user.id });
+
+    try {
+      const crypto = await query.getMany();
+      return crypto;
+    } catch (error) {
+      console.warn(error);
+      throw new UnprocessableEntityException();
+    }
   }
 }

@@ -12,6 +12,9 @@ import { HttpService } from '@nestjs/axios';
 import { catchError, firstValueFrom } from 'rxjs';
 import { AxiosError } from 'axios/index';
 import { CoinGeckoCoinInfo } from './types/api.types';
+import { User } from '../auth/user.entity';
+import { CryptoViewModelType } from './types/crypto.viewModel.type';
+import { cryptoViewModel } from './adapters/crypto.viewmodel';
 
 @Injectable()
 export class AssetsService {
@@ -62,5 +65,12 @@ export class AssetsService {
       console.warn(error);
       throw new ForbiddenException();
     }
+  }
+
+  async getUserCrypto(user: User): Promise<CryptoViewModelType[]> {
+    const cryptos: Asset[] = await this.assetsRepository.getUserCrypto(user);
+    const cryptosViewModel: CryptoViewModelType[] =
+      cryptos.map(cryptoViewModel);
+    return cryptosViewModel;
   }
 }
