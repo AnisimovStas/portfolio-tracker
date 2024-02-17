@@ -26,15 +26,4 @@ export class TransactionsController {
       createTransactionDto,
     );
   }
-
-  // @Post()
-  // createTransaction1(
-  //   @GetUser() user: User,
-  //   @Body() createTransactionDto: CreateTransactionDto,
-  // ): Promise<Transaction> {
-  //   return this.transactionsService.createTransaction(
-  //     user,
-  //     createTransactionDto,
-  //   );
-  // }
 }
