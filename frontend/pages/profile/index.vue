@@ -1,17 +1,13 @@
 <template>
   <div class="p-2 page__container">
-    <div>
-      hello
-      <!--      <GeneralInfo />-->
-      <!--      <Actives />-->
-    </div>
+    <GeneralInfo />
+    <Actives />
   </div>
 </template>
 
 <script setup lang="ts">
-// import { useAuthStore } from "~/store/auth.store";
-// import GeneralInfo from "~/layers/Portfolio/components/GeneralInfo/GeneralInfo.vue";
-// import Actives from "~/layers/Portfolio/components/Actives/Actives.vue";
+import GeneralInfo from "~/layers/Portfolio/components/GeneralInfo/GeneralInfo.vue";
+import Actives from "~/layers/Portfolio/components/Actives/Actives.vue";
 import { usePortfolioStore } from "~/layers/Portfolio/store/Portfolio.store";
 
 const portfolioStore = usePortfolioStore();
