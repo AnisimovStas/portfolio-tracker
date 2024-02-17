@@ -18,23 +18,23 @@
       </div>
       <div class="right-side">
         <p>
-          {{ active.totalPrice }}
+          {{ active.totalCurrentPrice }}
           $
         </p>
         <div class="profit__info">
           <p>
             {{
-              active.profit.toString().startsWith("-")
-                ? active.profit
-                : `+${active.profit}`
+              active.profit.value.toString().startsWith("-")
+                ? active.profit.value
+                : `+${active.profit.value}`
             }}
             $
           </p>
           <p>
             {{
-              active.profitPercentage.toString().startsWith("-")
-                ? active.profitPercentage
-                : `+${active.profitPercentage}`
+              active.profit.percentage.toString().startsWith("-")
+                ? active.profit.percentage
+                : `+${active.profit.percentage}`
             }}%
           </p>
         </div>
@@ -59,14 +59,12 @@
             </p>
             <p>% от {{ percentOfTotalBlock }}</p>
             <p>Находится в портфеле с: {{ active.transactions[0].date }}</p>
-            <p>Средняя цена покупки: {{ active.averagePrice }} $</p>
-            <p v-if="active.stackingPercentage > 0">
-              Процент стейкинга: {{ active.stackingPercentage }} %
-            </p>
-            <p v-if="active.stackingPercentage > 0">
-              Получено от стейкинга: {{ active.totalStackedAmount }}
-              {{ active.ticker.toUpperCase() }} ||
-              {{ active.totalStackedInFiat }} $
+            <!--            <p>Средняя цена покупки: {{ active.averagePrice }} $</p>-->
+            <!--            <p v-if="active.stackingPercentage > 0">-->
+            <!--              Процент стейкинга: {{ active.stackingPercentage }} %-->
+            <!--            </p>-->
+            <p v-if="active.earnedByStacking > 0">
+              Получено от стейкинга: {{ active.earnedByStacking }}
             </p>
           </div>
         </div>
@@ -88,7 +86,6 @@
 </template>
 <script setup lang="ts">
 // TODO Добавить анимацию, чтобы красиво изменялась высота контейнера
-import { $fetch } from "ofetch";
 import type { IActiveTypesProps } from "~/layers/Portfolio/components/Active/Active.types";
 import { usePortfolioStore } from "~/layers/Portfolio/store/Portfolio.store";
 
@@ -98,9 +95,9 @@ const portfolioStore = usePortfolioStore();
 
 const modifiedDescription = ref(props.active.description);
 
-const isDescriptionChanged = computed(() => {
-  return props.active.description !== modifiedDescription.value;
-});
+// const isDescriptionChanged = computed(() => {
+//   return props.active.description !== modifiedDescription.value;
+// });
 
 const txTableColumns = [
   {
@@ -131,19 +128,19 @@ const txTableRowsTranslated = computed(() => {
 });
 
 const descriptionHandler = async () => {
-  if (isDescriptionChanged.value) {
-    await $fetch("http://localhost:9229/api/portfolios/update-description", {
-      body: {
-        newDescription: modifiedDescription.value,
-        portfolioRowId: props.active.portfolioRowId,
-        rowType: props.blockType,
-      },
-      headers: {
-        Authorization: `Bearer ${useCookie("authorization").value}`,
-      },
-      method: "PUT",
-    });
-  }
+  // if (isDescriptionChanged.value) {
+  //   await $fetch("http://localhost:9229/api/portfolios/update-description", {
+  //     body: {
+  //       newDescription: modifiedDescription.value,
+  //       portfolioRowId: props.active.portfolioRowId,
+  //       rowType: props.blockType,
+  //     },
+  //     headers: {
+  //       Authorization: `Bearer ${useCookie("authorization").value}`,
+  //     },
+  //     method: "PUT",
+  //   });
+  // }
 };
 
 const isOpen = ref(false);
@@ -155,7 +152,7 @@ const computeSrc = computed(() => {
 const percentOfTotalPortfolio = computed(() => {
   return (
     (
-      (props.active.totalPrice / portfolioStore.totalPortfolioValue) *
+      (props.active.totalCurrentPrice / portfolioStore.totalPortfolioValue) *
       100
     ).toFixed(2) + "%"
   );
@@ -169,7 +166,9 @@ const percentOfTotalBlock = computed(() => {
 
   return (
     blockMapping +
-    ((props.active.totalPrice / props.totalBlockValue) * 100).toFixed(2) +
+    ((props.active.totalCurrentPrice / props.totalBlockValue) * 100).toFixed(
+      2,
+    ) +
     "%"
   );
 });

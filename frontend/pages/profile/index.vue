@@ -1,43 +1,16 @@
 <template>
   <div class="p-2 page__container">
-    <div v-if="!portfolioStore.isPortfolioEmpty">
-      <GeneralInfo />
-      <Actives />
-    </div>
-    <div v-else class="empty-portfolio">
-      <p>Вы еще не создали портфеля, нажмите кнопку создать портфель</p>
-      <UButton @click="createPortfolio">Создать портфель</UButton>
-    </div>
+    <GeneralInfo />
+    <Actives />
   </div>
 </template>
 
 <script setup lang="ts">
-import { useAuthStore } from "~/store/auth.store";
 import GeneralInfo from "~/layers/Portfolio/components/GeneralInfo/GeneralInfo.vue";
 import Actives from "~/layers/Portfolio/components/Actives/Actives.vue";
 import { usePortfolioStore } from "~/layers/Portfolio/store/Portfolio.store";
 
-const authStore = useAuthStore();
 const portfolioStore = usePortfolioStore();
 
-onBeforeMount(async () => {
-  if (authStore.isAuth && !authStore.user) {
-    await authStore.getMe();
-    await portfolioStore.getActives();
-  }
-});
-
-const createPortfolio = async () => {
-  await portfolioStore.createPortfolio();
-  await authStore.getMe();
-};
+useAsyncData("fetchCrypto", portfolioStore.fetchCrypto);
 </script>
-
-<style scoped>
-.empty-portfolio {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-}
-</style>

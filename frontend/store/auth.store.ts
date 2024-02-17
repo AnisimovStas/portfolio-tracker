@@ -1,3 +1,5 @@
+import { getMe } from "~/services/auth/auth.service";
+
 export interface IUser {
   displayName: string;
   email: string;
@@ -6,44 +8,28 @@ export interface IUser {
 
 export const useAuthStore = defineStore("global/auth", () => {
   // const user = ref<IUser | null>(null);
-  const isAuthCookie = useCookie("authorization");
-
-  const {
-    data: user,
-    pending: isLoading,
-    error,
-    execute: getMe,
-  } = useFetch<IUser>("/api/auth/getMe", {
-    headers: {
-      Authorization: `Bearer ${isAuthCookie.value}`,
-    },
-    immediate: false,
-  });
-
-  watch(
-    () => error.value,
-    () => {
-      if (error.value) {
-        isAuthCookie.value = null;
-      }
-    },
-  );
+  const accessToken = useCookie("authorization");
+  const { data: user, execute } = getMe();
 
   const logout = () => {
-    isAuthCookie.value = null;
+    accessToken.value = null;
     user.value = null;
     navigateTo("/");
   };
 
+  const fetchUserInfo = async () => {
+    if (user.value || !isAuth.value) return;
+    await execute();
+  };
+
   const isAuth = computed(() => {
-    const isAuthCookie = useCookie("authorization");
-    return !!isAuthCookie.value;
+    return !!accessToken.value;
   });
 
   return {
-    getMe,
+    accessToken,
+    fetchUserInfo,
     isAuth,
-    isLoading,
     logout,
     user,
   };
