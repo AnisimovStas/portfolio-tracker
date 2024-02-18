@@ -1,5 +1,6 @@
 import {
   Injectable,
+  InternalServerErrorException,
   NotFoundException,
   UnprocessableEntityException,
 } from '@nestjs/common';
@@ -57,6 +58,26 @@ export class AssetsRepository extends Repository<Asset> {
     } catch (error) {
       console.warn(error);
       throw new UnprocessableEntityException();
+    }
+  }
+
+  async getAssetBySearch(search: string): Promise<Asset[]> {
+    const query = this.createQueryBuilder('asset');
+
+    query.where(
+      '(LOWER(asset.ticker) LIKE LOWER(:search) OR LOWER(asset.name) LIKE LOWER(:search))',
+      {
+        search: `%${search}%`,
+      },
+    );
+    query.take(10);
+
+    try {
+      const assets = await query.getMany();
+      return assets;
+    } catch (error) {
+      console.warn(error);
+      throw new InternalServerErrorException();
     }
   }
 }

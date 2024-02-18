@@ -1,7 +1,8 @@
 import { useAuthStore } from "~/store/auth.store";
 
 export enum EApiUrls {
-  BASE = "baseApiUrl",
+  BASE = "http://localhost:9229",
+  COINGECKO = "https://api.coingecko.com",
 }
 
 export enum EApiTypes {
@@ -68,7 +69,7 @@ export function useAPI<TFinalData, TRawData = TFinalData>(
     () =>
       $fetch<IApiResponse<TRawData>>(url, {
         // TODO добавить через nuxt config или .env
-        baseURL: "http://localhost:9229",
+        baseURL: apiConfig.baseUrl,
         body: options?.fetch?.body ?? undefined,
         headers: getAuthHeaders() ?? undefined,
         method: options?.fetch?.method ?? "GET",

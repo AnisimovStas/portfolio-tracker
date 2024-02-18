@@ -33,7 +33,8 @@ export class CreateCryptoTxDto {
   priceAtDate: number;
 
   @IsNumber()
-  @ValidateIf((_object, value) => value !== 0)
+  @IsPositive()
+  @ValidateIf((_object, value) => Number(value) !== 0)
   @Transform(({ value }) => (value ? Number(value) : null))
   stackingPercentage: number | null;
 
