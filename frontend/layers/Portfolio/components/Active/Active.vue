@@ -160,8 +160,8 @@ const percentOfTotalPortfolio = computed(() => {
 
 const percentOfTotalBlock = computed(() => {
   const blockMapping = {
-    crypto: "криптовалюты: ",
-    stock: "акций: ",
+    CRYPTO: "криптовалюты: ",
+    STOCKS: "акций: ",
   }[props.blockType];
 
   return (
