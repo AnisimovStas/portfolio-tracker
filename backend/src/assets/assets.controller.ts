@@ -10,6 +10,11 @@ import { AuthGuard } from '@nestjs/passport';
 export class AssetsController {
   constructor(private readonly assetsService: AssetsService) {}
 
+  @Get()
+  getAssetBySearch(@Query('search') search: string): Promise<Asset[]> {
+    return this.assetsService.getAssetBySearch(search);
+  }
+
   @Post('/crypto/add')
   getFromCoinGecko(@Query('page') page: number): Promise<Asset[]> {
     return this.assetsService.addCryptoInDataBaseByPage(page);

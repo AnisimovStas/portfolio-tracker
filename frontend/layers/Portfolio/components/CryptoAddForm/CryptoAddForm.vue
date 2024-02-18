@@ -1,6 +1,6 @@
 <template>
   <div
-    v-if="addCurrencyStore.selectedActive"
+    v-if="addCurrencyStore.selectedAsset"
     class="crypto-form__container gap-2"
   >
     <div class="flex gap-2 items-center justify-center">
@@ -24,7 +24,7 @@
     >
       <template #trailing>
         <span class="text-gray-500 dark:text-gray-400 text-xs">
-          {{ addCurrencyStore?.selectedActive?.ticker?.toUpperCase() }}</span
+          {{ addCurrencyStore.selectedAsset.ticker.toUpperCase() }}</span
         >
       </template>
     </UInput>

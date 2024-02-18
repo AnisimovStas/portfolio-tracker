@@ -4,7 +4,7 @@ export const usePortfolioStore = defineStore("portfolio", () => {
   const { data: cryptos, execute } = getCrypto();
 
   const fetchCrypto = async () => {
-    if (cryptos.value) return;
+    // if (cryptos.value) return;
     await execute();
   };
 

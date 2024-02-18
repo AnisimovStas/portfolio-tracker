@@ -8,6 +8,7 @@ import {
 import { ASSET_TYPE } from './types/assets.types';
 import { Transaction } from '../transactions/transaction.entity';
 import { AssetHistoricalPrice } from './asset-historical-price.entity';
+import { Exclude } from 'class-transformer';
 
 @Entity()
 export class Asset {
@@ -39,6 +40,7 @@ export class Asset {
   @Column({ type: 'float' })
   currentPrice: number;
 
+  @Exclude()
   @UpdateDateColumn()
   updatedAt: Date;
 

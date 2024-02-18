@@ -31,6 +31,10 @@ export class AssetsService {
     return this.assetsRepository.getAssetByTickerAndType(ticker, assetType);
   }
 
+  getAssetBySearch(search: string): Promise<Asset[]> {
+    return this.assetsRepository.getAssetBySearch(search);
+  }
+
   async fetchCryptoCoins(page = 1): Promise<CoinGeckoCoinInfo[]> {
     const url = `https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&per_page=250&page=${page}`;
     const { data } = await firstValueFrom(
