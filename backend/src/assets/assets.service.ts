@@ -15,6 +15,9 @@ import { CoinGeckoCoinInfo } from './types/api.types';
 import { User } from '../auth/user.entity';
 import { CryptoViewModelType } from './types/crypto.viewModel.type';
 import { cryptoViewModel } from './adapters/crypto.viewmodel';
+import { In } from 'typeorm';
+import { UpdateCryptoPriceDto } from './update-crypto-price.dto';
+import { Cron } from '@nestjs/schedule';
 
 @Injectable()
 export class AssetsService {
@@ -35,11 +38,12 @@ export class AssetsService {
     return this.assetsRepository.getAssetBySearch(search);
   }
 
-  async fetchCryptoCoins(page = 1): Promise<CoinGeckoCoinInfo[]> {
+  async fetchCryptoCoinsByPage(page = 1): Promise<CoinGeckoCoinInfo[]> {
     const url = `https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&per_page=250&page=${page}`;
     const { data } = await firstValueFrom(
       this.httpService.get<CoinGeckoCoinInfo[]>(url).pipe(
         catchError((error: AxiosError) => {
+          console.warn(error);
           throw new HttpException(`Error ${error}`, HttpStatus.FORBIDDEN);
         }),
       ),
@@ -48,7 +52,7 @@ export class AssetsService {
   }
 
   async addCryptoInDataBaseByPage(page = 1): Promise<Asset[]> {
-    const data = await this.fetchCryptoCoins(page);
+    const data = await this.fetchCryptoCoinsByPage(page);
     const cryptos: Asset[] = [];
 
     for (const crypto of data) {
@@ -69,6 +73,62 @@ export class AssetsService {
       console.warn(error);
       throw new ForbiddenException();
     }
+  }
+
+  async updateCryptoPrices(part: number) {
+    const updatedCryptosArray: UpdateCryptoPriceDto[] = [];
+    const initPage = part === 1 ? 1 : 3;
+    const endPage = part === 1 ? 2 : 4;
+
+    for (let page = initPage; page <= endPage; page++) {
+      const data = await this.fetchCryptoCoinsByPage(page);
+      const mappedData: UpdateCryptoPriceDto[] = data.map(
+        (crypto: CoinGeckoCoinInfo) => {
+          return {
+            coinGeckoId: crypto.id,
+            currentPrice: crypto.current_price,
+          };
+        },
+      );
+      updatedCryptosArray.push(...mappedData);
+    }
+
+    const uniqueCoinGeckoIds = updatedCryptosArray.map(
+      (item) => item.coinGeckoId,
+    );
+
+    try {
+      const cryptos = await this.assetsRepository.find({
+        where: {
+          coinGeckoId: In(uniqueCoinGeckoIds),
+        },
+      });
+
+      for (const crypto of cryptos) {
+        const matchingData = updatedCryptosArray.find(
+          (item) => item.coinGeckoId === crypto.coinGeckoId,
+        );
+        crypto.currentPrice = matchingData.currentPrice;
+      }
+
+      await this.assetsRepository.save(cryptos);
+      console.log(`crypto prices updated successfully part ${part}`);
+      return cryptos;
+    } catch (error) {
+      console.warn(`error during updating crypto prices part: ${part}`);
+      console.warn(error);
+      throw new ForbiddenException();
+    }
+  }
+
+  @Cron('0 10/30 * * * *')
+  async intervalUpdateCryptoPricesPart1() {
+    await this.updateCryptoPrices(1);
+  }
+
+  @Cron('0 15/30 * * * *')
+  async intervalUpdateCryptoPricesPart2() {
+    await this.updateCryptoPrices(2);
   }
 
   async getUserCrypto(user: User): Promise<CryptoViewModelType[]> {
