@@ -1,6 +1,7 @@
 import { CryptoViewModelType } from '../types/crypto.viewModel.type';
 import { Asset } from '../asset.entity';
 import {
+  getAverageBuyPrice,
   getDeposited,
   getDescription,
   getProfit,
@@ -8,21 +9,27 @@ import {
   getTotalAmount,
   getTotalCurrentPrice,
 } from '../utils/assets.utils';
-import { getEarnedByStacking } from '../utils/crypto.utils';
+import {
+  getEarnedAmountByStacking,
+  getEarnedMoneyByStacking,
+} from '../utils/crypto.utils';
 
 export const cryptoViewModel = (crypto: Asset): CryptoViewModelType => {
-  const earnedByStacking = getEarnedByStacking(crypto);
+  const earnedByStacking = getEarnedMoneyByStacking(crypto);
+  const earnedAmountByStacking = getEarnedAmountByStacking(crypto);
   return {
     coinGeckoId: crypto.coinGeckoId,
     name: crypto.name,
     ticker: crypto.ticker,
     icon: crypto.icon,
     earnedByStacking: earnedByStacking,
-    totalAmount: getTotalAmount(crypto.transactions),
-    totalCurrentPrice: getTotalCurrentPrice(crypto),
+    earnedAmountByStacking: earnedAmountByStacking,
+    averageBuyPrice: getAverageBuyPrice(crypto.transactions),
+    totalAmount: getTotalAmount(crypto.transactions, earnedAmountByStacking),
+    totalCurrentPrice: getTotalCurrentPrice(crypto, earnedAmountByStacking),
     profit: {
-      value: getProfit(crypto, earnedByStacking),
-      percentage: getProfitPercentage(crypto, earnedByStacking),
+      value: getProfit(crypto, earnedAmountByStacking),
+      percentage: getProfitPercentage(crypto, earnedAmountByStacking),
     },
     deposited: getDeposited(crypto),
     currentPrice: crypto.currentPrice,

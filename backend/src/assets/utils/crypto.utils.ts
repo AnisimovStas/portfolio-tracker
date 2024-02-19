@@ -3,7 +3,7 @@ import { Transaction } from '../../transactions/transaction.entity';
 import { getDaysFromNow } from './assets.utils';
 import { TRANSACTION_TYPE } from '../../transactions/types/transactions.types';
 
-export const getEarnedByStackingFromTransaction = (
+export const getEarnedAmountByStackingFromTransaction = (
   transaction: Transaction,
 ): number => {
   if (!transaction.stackingPercentage) {
@@ -17,12 +17,17 @@ export const getEarnedByStackingFromTransaction = (
   );
 };
 
-export const getEarnedByStacking = (crypto: Asset): number => {
+export const getEarnedAmountByStacking = (crypto: Asset): number => {
   let earnedByStacking = 0;
   for (const transaction of crypto.transactions) {
-    const earned = getEarnedByStackingFromTransaction(transaction);
+    const earned = getEarnedAmountByStackingFromTransaction(transaction);
     earnedByStacking +=
       transaction.transactionType === TRANSACTION_TYPE.BUY ? earned : -earned;
   }
   return earnedByStacking * crypto.currentPrice;
+};
+
+export const getEarnedMoneyByStacking = (crypto: Asset): number => {
+  const earnedAmount = getEarnedAmountByStacking(crypto);
+  return earnedAmount * crypto.currentPrice;
 };
