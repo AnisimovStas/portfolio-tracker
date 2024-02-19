@@ -10,6 +10,15 @@ export interface CryptoViewModelType {
   ticker: string;
   icon: string;
   /*
+   * earnedAmountByStacking: сколько пользователь заработал на стейкинге (в монетках)
+   */
+  earnedAmountByStacking: number;
+  /*
+   * averagePrice: средняя цена покупки
+   */
+  averageBuyPrice: number;
+
+  /*
    * earnedByStacking: сколько пользователь заработал на стейкинге по текущему базовому курсу
    */
   earnedByStacking: number;
