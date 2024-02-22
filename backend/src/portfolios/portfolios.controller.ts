@@ -1,34 +1,15 @@
-import { Body, Controller, Put, UseGuards } from '@nestjs/common';
+import { Controller, UseGuards } from '@nestjs/common';
 import { PortfoliosService } from './portfolios.service';
 import { AuthGuard } from '@nestjs/passport';
-// import { Request } from 'express';
-import { editDescriptionDto } from './dto/edit-description.dto';
 
+@UseGuards(AuthGuard('jwt'))
 @Controller('portfolios')
 export class PortfoliosController {
   constructor(private readonly portfoliosService: PortfoliosService) {}
 
-  // @UseGuards(AuthGuard('jwt'))
-  // @Get()
-  // async getPortfolio(@Req() request: Request) {
-  //   return this.portfoliosService.getPortfolio(request.user['id']);
+  // @Put('update-description')
+  // async updateDescription(@Body() payload: editDescriptionDto) {
+  //   // return this.portfoliosService.editRowDescription(payload);
+  //   return this.portfoliosService.editRowDescription(payload);
   // }
-  //
-  // @UseGuards(AuthGuard('jwt'))
-  // @Post('addCurrency')
-  // async addCurrency(@Req() request: Request, @Body() payload: TCreateRowDto) {
-  //   return this.portfoliosService.addCurrency(request.user['id'], payload);
-  // }
-
-  // @UseGuards(AuthGuard('jwt'))
-  // @Post('create')
-  // async createPortfolio(@Req() request: Request) {
-  //   return this.portfoliosService.createPortfolio(request.user['id']);
-  // }
-
-  @UseGuards(AuthGuard('jwt'))
-  @Put('update-description')
-  async updateDescription(@Body() payload: editDescriptionDto) {
-    return this.portfoliosService.editRowDescription(payload);
-  }
 }

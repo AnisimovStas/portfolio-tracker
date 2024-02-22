@@ -1,12 +1,10 @@
 import { Module } from '@nestjs/common';
 import { PortfoliosService } from './portfolios.service';
 import { PortfoliosController } from './portfolios.controller';
-import { CryptoRowModule } from '../crypto-row/crypto-row.module';
-import { PortfoliosRepository } from './portfolios.repository';
 
 @Module({
-  imports: [CryptoRowModule],
-  providers: [PortfoliosService, PortfoliosRepository],
+  imports: [],
+  providers: [PortfoliosService],
   controllers: [PortfoliosController],
   exports: [PortfoliosService],
 })
