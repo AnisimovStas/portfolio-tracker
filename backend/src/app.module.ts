@@ -8,30 +8,21 @@ import { ScheduleModule } from '@nestjs/schedule';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TransactionsModule } from './transactions/transactions.module';
 import { AssetsModule } from './assets/assets.module';
+import { AppConfig, DatabaseConfig } from './config';
 
 @Module({
   imports: [
-    ConfigModule.forRoot(),
+    ConfigModule.forRoot({
+      isGlobal: true,
+      cache: true,
+      load: [AppConfig, DatabaseConfig],
+    }),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
-      useFactory: async (configService: ConfigService) => {
+      useFactory: (configService: ConfigService) => {
         return {
-          type: 'postgres',
-          host: configService.get<string>('TYPEORM_HOST'),
-          port: parseInt(configService.get<string>('TYPEORM_PORT')),
-          username: configService.get<string>('TYPEORM_USERNAME'),
-          password: configService.get<string>('TYPEORM_PASSWORD'),
-          database: configService.get<string>('DATABASE_NAME'),
-          entities: ['dist/**/*entity.js'],
-          migrations: ['dist/migrations/*.js'],
-          migrationsRun: false,
-          migrationsTableName: configService.get<string>(
-            'TYPEORM_MIGRATIONS_TABLE_NAME',
-          ),
-          migrationDir: 'src/migrations',
-          synchronize: false,
-          autoLoadEntities: true,
+          ...configService.get('database'),
         };
       },
     }),
