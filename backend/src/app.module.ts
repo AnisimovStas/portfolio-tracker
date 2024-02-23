@@ -1,28 +1,39 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ImageService } from './image/image.service';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
 import { AuthModule } from './auth/auth.module';
 import { ScheduleModule } from '@nestjs/schedule';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TransactionsModule } from './transactions/transactions.module';
 import { AssetsModule } from './assets/assets.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot(),
-    TypeOrmModule.forRoot({
-      type: 'postgres',
-      host: 'localhost',
-      port: 5432,
-      username: 'postgres',
-      password: 'postgres',
-      database: 'portfolio',
-      autoLoadEntities: true,
-      synchronize: true,
+    TypeOrmModule.forRootAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: async (configService: ConfigService) => {
+        return {
+          type: 'postgres',
+          host: configService.get<string>('TYPEORM_HOST'),
+          port: parseInt(configService.get<string>('TYPEORM_PORT')),
+          username: configService.get<string>('TYPEORM_USERNAME'),
+          password: configService.get<string>('TYPEORM_PASSWORD'),
+          database: configService.get<string>('DATABASE_NAME'),
+          entities: ['dist/**/*entity.js'],
+          migrations: ['dist/migrations/*.js'],
+          migrationsRun: false,
+          migrationsTableName: configService.get<string>(
+            'TYPEORM_MIGRATIONS_TABLE_NAME',
+          ),
+          migrationDir: 'src/migrations',
+          synchronize: false,
+          autoLoadEntities: true,
+        };
+      },
     }),
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '..', 'src', 'img'),
@@ -33,7 +44,7 @@ import { AssetsModule } from './assets/assets.module';
     TransactionsModule,
     AssetsModule,
   ],
-  controllers: [AppController],
-  providers: [AppService, ImageService],
+  controllers: [],
+  providers: [ImageService],
 })
 export class AppModule {}
