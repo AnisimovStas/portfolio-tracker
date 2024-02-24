@@ -9,6 +9,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TransactionsModule } from './transactions/transactions.module';
 import { AssetsModule } from './assets/assets.module';
 import { AppConfig, DatabaseConfig } from './config';
+import { PortfoliosModule } from './portfolios/portfolios.module';
 
 @Module({
   imports: [
@@ -31,6 +32,7 @@ import { AppConfig, DatabaseConfig } from './config';
       serveRoot: '/img',
     }),
     AuthModule,
+    PortfoliosModule,
     ScheduleModule.forRoot(),
     TransactionsModule,
     AssetsModule,

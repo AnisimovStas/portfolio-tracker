@@ -1,5 +1,6 @@
 .idea
 .env
+db/migrations/
 .graphqlconfig
 remote-schema.graphql
 ansible/config/id_rsa

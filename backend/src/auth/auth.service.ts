@@ -4,6 +4,7 @@ import { JwtService } from '@nestjs/jwt';
 import { UserGoogleDetailsDto } from './dto/user-google-details.dto';
 import { UsersRepository } from './users.repository';
 import { JwtPayload } from './types/jwt-payload.type';
+import { User } from './user.entity';
 
 @Injectable()
 export class AuthService {
@@ -28,5 +29,12 @@ export class AuthService {
     const accessToken = this.jwtService.sign(payload);
 
     return { access_token: accessToken };
+  }
+
+  async getAllUsers(): Promise<User[]> {
+    const users = await this.usersRepository.find({
+      relations: ['transactions.asset'],
+    });
+    return users;
   }
 }
