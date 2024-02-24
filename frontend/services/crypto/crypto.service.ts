@@ -62,7 +62,7 @@ export interface ICrypto {
 
 export const getCrypto = () => {
   return useAPI<ICrypto[], ICrypto[]>(
-    "all-cases",
+    "fetch-crypto",
     "/api/assets/crypto",
     {
       baseUrl: EApiUrls.BASE,
