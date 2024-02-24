@@ -7,8 +7,8 @@ import {
 } from 'typeorm';
 import { ASSET_TYPE } from './types/assets.types';
 import { Transaction } from '../transactions/transaction.entity';
-import { AssetHistoricalPrice } from './asset-historical-price.entity';
 import { Exclude } from 'class-transformer';
+import { HistoryOfAssetInPortfolio } from '../portfolios/Entity/HistoryOfAssetInPortfolio.entity';
 
 @Entity()
 export class Asset {
@@ -48,8 +48,8 @@ export class Asset {
   transactions: Transaction[];
 
   @OneToMany(
-    () => AssetHistoricalPrice,
-    (assetHistoricalPrice) => assetHistoricalPrice.asset,
+    () => HistoryOfAssetInPortfolio,
+    (historyOfAssetInPortfolio) => historyOfAssetInPortfolio.asset,
   )
-  historicalPrices: AssetHistoricalPrice[];
+  historyOfAssetInPortfolio: HistoryOfAssetInPortfolio[];
 }
