@@ -9,17 +9,26 @@
 </template>
 <script setup lang="ts">
 import Chart from "~/layers/Portfolio/components/Chart/Chart.vue";
+import { usePortfolioHistoryStore } from "~/layers/Portfolio/store/Portfolio-history.store";
+
+const portfolioHistoryStore = usePortfolioHistoryStore();
 
 const activeChart = ref(1);
 
-const items = [
-  {
-    data: ["График общей стоимости"],
-    label: "График общей стоимости",
-    value: 0,
-  },
-  { data: ["График профита"], label: "График профита", value: 1 },
-];
+const items = computed(() => {
+  return [
+    {
+      data: portfolioHistoryStore.priceValueHistory,
+      label: "График общей стоимости",
+      value: 0,
+    },
+    {
+      data: portfolioHistoryStore.profitHistory,
+      label: "График профита",
+      value: 1,
+    },
+  ];
+});
 </script>
 
 <style scoped>

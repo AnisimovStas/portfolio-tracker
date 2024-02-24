@@ -2,8 +2,12 @@
   <div class="chart__container">Cам график {{ data }}</div>
 </template>
 <script setup lang="ts">
+export interface IChartData {
+  date: Date;
+  value: number;
+}
 export interface IChartProps {
-  data: unknown[];
+  data: IChartData[];
 }
 
 defineProps<IChartProps>();
