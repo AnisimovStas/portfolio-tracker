@@ -24,7 +24,7 @@ export const getEarnedAmountByStacking = (crypto: Asset): number => {
     earnedByStacking +=
       transaction.transactionType === TRANSACTION_TYPE.BUY ? earned : -earned;
   }
-  return earnedByStacking * crypto.currentPrice;
+  return earnedByStacking;
 };
 
 export const getEarnedMoneyByStacking = (crypto: Asset): number => {
