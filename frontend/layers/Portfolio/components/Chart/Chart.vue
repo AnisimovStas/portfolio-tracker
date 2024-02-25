@@ -1,5 +1,5 @@
 <template>
-  <div class="chart__container">
+  <div :class="classes">
     <ClientOnly placeholder="loading...">
       <Line :options="options" :data="chartData" />
     </ClientOnly>
@@ -19,6 +19,11 @@ import {
   type ChartData,
 } from "chart.js";
 import { Line } from "vue-chartjs";
+import type { IChartProps } from "~/layers/Portfolio/components/Chart/Chart.types";
+import {
+  CHART_COLOR_PRESET,
+  PRESET,
+} from "~/layers/Portfolio/components/Chart/Chart.types";
 
 ChartJS.register(
   CategoryScale,
@@ -30,16 +35,25 @@ ChartJS.register(
   Legend,
 );
 
-export interface IChartData {
-  date: string;
-  value: number;
-}
-export interface IChartProps {
-  data: IChartData[];
-  label: string;
-}
-
 const props = defineProps<IChartProps>();
+
+const colors = computed(() => {
+  const colors = {
+    main: "white",
+    side: "white",
+  };
+
+  if (props.chartColorPreset === CHART_COLOR_PRESET.BLUE) {
+    colors.main = "#111827";
+    colors.side = "white";
+  }
+
+  if (props.chartColorPreset === CHART_COLOR_PRESET.GREY) {
+    colors.main = "#374151";
+    colors.side = "white";
+  }
+  return colors;
+});
 
 const options = computed<ChartOptions<"line">>(() => {
   return {
@@ -56,18 +70,18 @@ const options = computed<ChartOptions<"line">>(() => {
     scales: {
       x: {
         grid: {
-          color: "#374151",
+          color: colors.value.main,
         },
         ticks: {
-          color: "#374151",
+          color: colors.value.main,
         },
       },
       y: {
         grid: {
-          color: "#374151",
+          color: colors.value.main,
         },
         ticks: {
-          color: "#374151",
+          color: colors.value.main,
         },
       },
     },
@@ -86,7 +100,7 @@ const chartData = computed<ChartData<"line">>(() => {
   return {
     datasets: [
       {
-        borderColor: "white",
+        borderColor: colors.value.side,
         borderWidth: 2,
         data: data.value,
         label: props.label,
@@ -95,6 +109,20 @@ const chartData = computed<ChartData<"line">>(() => {
     ],
     labels: labels.value,
   };
+});
+
+const classes = computed(() => {
+  let classes = "chart__container";
+
+  if (props.preset === PRESET.ACTIVE) {
+    classes += " active-preset__container";
+  }
+
+  if (props.preset === PRESET.GENERAL) {
+    classes += " general-preset__container";
+  }
+
+  return classes;
 });
 </script>
 <style scoped>
@@ -105,7 +133,15 @@ const chartData = computed<ChartData<"line">>(() => {
   gap: 10px;
   align-items: center;
   justify-content: center;
+}
+
+.general-preset__container {
   width: 600px;
   height: 300px;
+}
+
+.active-preset__container {
+  width: 300px;
+  height: 200px;
 }
 </style>

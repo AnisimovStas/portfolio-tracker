@@ -1,10 +1,16 @@
 import { getCrypto, type ICrypto } from "~/services/crypto/crypto.service";
+import type { ACTIVE_TYPE } from "~/types/transaction.types";
+
+export interface IHistoryPayload {
+  assetId: number;
+  ticker: string;
+  type: ACTIVE_TYPE;
+}
 
 export const usePortfolioStore = defineStore("portfolio", () => {
   const { data: cryptos, execute } = getCrypto();
 
   const fetchCrypto = async () => {
-    // if (cryptos.value) return;
     await execute();
   };
 

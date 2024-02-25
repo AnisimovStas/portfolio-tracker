@@ -9,7 +9,7 @@
 import Actives from "~/layers/Portfolio/components/Actives/Actives.vue";
 import { usePortfolioStore } from "~/layers/Portfolio/store/Portfolio.store";
 import { usePortfolioHistoryStore } from "~/layers/Portfolio/store/Portfolio-history.store";
-import Header from "~/layers/Portfolio/Header/Header.vue";
+import Header from "~/layers/Portfolio/components/Header/Header.vue";
 
 const portfolioStore = usePortfolioStore();
 const portfolioHistoryStore = usePortfolioHistoryStore();

@@ -4,6 +4,8 @@
       <Chart
         v-if="activeChart === item.value"
         :data="item.data"
+        :preset="PRESET.GENERAL"
+        :chart-color-preset="CHART_COLOR_PRESET.GREY"
         :label="item.label"
       />
     </div>
@@ -19,6 +21,10 @@ import {
   ChartPeriod,
   usePortfolioHistoryStore,
 } from "~/layers/Portfolio/store/Portfolio-history.store";
+import {
+  CHART_COLOR_PRESET,
+  PRESET,
+} from "~/layers/Portfolio/components/Chart/Chart.types";
 
 const portfolioHistoryStore = usePortfolioHistoryStore();
 

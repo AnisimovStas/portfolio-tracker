@@ -36,6 +36,7 @@ export class AssetsRepository extends Repository<Asset> {
     const query = this.createQueryBuilder('asset');
 
     query.select([
+      'asset.id',
       'asset.coinGeckoId',
       'asset.name',
       'asset.ticker',

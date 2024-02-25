@@ -37,12 +37,13 @@ export interface ICrypto {
    * earnedAmountByStacking: сколько пользователь заработал на стейкинге (в монетках)
    */
   earnedAmountByStacking: number;
-
   /*
    * earnedByStacking: сколько пользователь заработал на стейкинге по текущему базовому курсу
    */
   earnedByStacking: number;
+
   icon: string;
+  id: number;
   name: string;
   /*
    * profit: Профит с учетом стэйкинга

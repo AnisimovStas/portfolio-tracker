@@ -31,6 +31,7 @@
 import { usePortfolioStore } from "~/layers/Portfolio/store/Portfolio.store";
 import Active from "~/layers/Portfolio/components/Active/Active.vue";
 import { ACTIVE_TYPE } from "~/types/transaction.types";
+import type { ICrypto } from "~/services/crypto/crypto.service";
 
 const portfolioStore = usePortfolioStore();
 </script>

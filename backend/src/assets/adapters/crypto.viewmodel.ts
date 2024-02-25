@@ -18,6 +18,7 @@ export const cryptoViewModel = (crypto: Asset): CryptoViewModelType => {
   const earnedByStacking = getEarnedMoneyByStacking(crypto);
   const earnedAmountByStacking = getEarnedAmountByStacking(crypto);
   return {
+    id: crypto.id,
     coinGeckoId: crypto.coinGeckoId,
     name: crypto.name,
     ticker: crypto.ticker,
