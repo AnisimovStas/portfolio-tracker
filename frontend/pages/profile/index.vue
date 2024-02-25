@@ -18,6 +18,7 @@ useAsyncData("fetchCrypto", () => {
   const promises = [
     portfolioStore.fetchCrypto(),
     portfolioHistoryStore.fetchHistory(),
+    portfolioStore.fetchGeneralInfo(),
   ];
 
   Promise.all(promises);

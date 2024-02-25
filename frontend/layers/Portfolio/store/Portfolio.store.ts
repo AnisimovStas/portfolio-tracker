@@ -1,5 +1,6 @@
 import { getCrypto, type ICrypto } from "~/services/crypto/crypto.service";
 import type { ACTIVE_TYPE } from "~/types/transaction.types";
+import { getPortfolioGeneralInfo } from "~/services/portfolio/portfolio.service";
 
 export interface IHistoryPayload {
   assetId: number;
@@ -9,6 +10,8 @@ export interface IHistoryPayload {
 
 export const usePortfolioStore = defineStore("portfolio", () => {
   const { data: cryptos, execute } = getCrypto();
+  const { data: generalInfo, execute: fetchGeneralInfo } =
+    getPortfolioGeneralInfo();
 
   const fetchCrypto = async () => {
     await execute();
@@ -22,14 +25,11 @@ export const usePortfolioStore = defineStore("portfolio", () => {
     );
   });
 
-  const totalPortfolioValue = computed(() => {
-    return totalCryptoValue.value;
-  });
-
   return {
     cryptos,
     fetchCrypto,
+    fetchGeneralInfo,
+    generalInfo,
     totalCryptoValue,
-    totalPortfolioValue,
   };
 });
