@@ -205,9 +205,11 @@ const computeSrc = computed(() => {
 });
 
 const percentOfTotalPortfolio = computed(() => {
+  if (!portfolioStore.generalInfo) return "0%";
   return (
     (
-      (props.active.totalCurrentPrice / portfolioStore.totalPortfolioValue) *
+      (props.active.totalCurrentPrice /
+        portfolioStore.generalInfo.totalAmount) *
       100
     ).toFixed(2) + "%"
   );

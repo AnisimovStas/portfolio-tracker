@@ -26,3 +26,25 @@ export const getPortfolioHistory = () => {
     },
   );
 };
+
+export interface IPortfolioGeneralInfo {
+  allTimeProfit: number;
+  dailyProfit: number;
+  totalAmount: number;
+}
+
+export const getPortfolioGeneralInfo = () => {
+  return useAPI<IPortfolioGeneralInfo, IPortfolioGeneralInfo>(
+    "fetch-portfolio-general-info",
+    "/api/portfolios/general-info",
+    {
+      baseUrl: EApiUrls.BASE,
+      type: EApiTypes.AUTH,
+    },
+    {
+      after: {
+        lazy: true,
+      },
+    },
+  );
+};
