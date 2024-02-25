@@ -5,6 +5,7 @@ import { GetUser } from '../auth/utils/get-user.decorator';
 import { User } from '../auth/user.entity';
 import { ASSET_TYPE } from '../assets/types/assets.types';
 import { HistoryViewModel } from './types/historyViewModel.types';
+import { GeneralInfoViewModel } from './types/generalInfo.types';
 
 @UseGuards(AuthGuard('jwt'))
 @Controller('portfolios')
@@ -29,10 +30,15 @@ export class PortfoliosController {
     );
   }
 
-  @Get('/test')
-  recordUsersHistories() {
-    return this.portfoliosService.recordUsersHistories();
+  @Get('general-info')
+  getGeneralInfo(@GetUser() user: User): Promise<GeneralInfoViewModel> {
+    return this.portfoliosService.getGeneralInfo(user);
   }
+
+  // @Get('/test')
+  // recordUsersHistories() {
+  //   return this.portfoliosService.recordUsersHistories();
+  // }
 
   // @Put('update-description')
   // async updateDescription(@Body() payload: editDescriptionDto) {

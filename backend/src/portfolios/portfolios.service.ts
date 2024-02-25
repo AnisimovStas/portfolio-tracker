@@ -12,6 +12,7 @@ import { AssetsService } from '../assets/assets.service';
 import { AuthService } from '../auth/auth.service';
 import { HistoryOfAssetInPortfolio } from './Entity/HistoryOfAssetInPortfolio.entity';
 import { Cron } from '@nestjs/schedule';
+import { GeneralInfoViewModel } from './types/generalInfo.types';
 
 @Injectable()
 export class PortfoliosService {
@@ -74,5 +75,45 @@ export class PortfoliosService {
       console.warn(error);
       throw new InternalServerErrorException();
     }
+  }
+
+  async getGeneralInfo(user: User): Promise<GeneralInfoViewModel> {
+    const cryptoViewModels = await this.assetsService.getUserCrypto(user);
+
+    const totalAmount: number = cryptoViewModels.reduce((acc, crypto) => {
+      return acc + crypto.totalCurrentPrice;
+    }, 0);
+
+    const allTimeProfit: number = cryptoViewModels.reduce((acc, crypto) => {
+      return acc + crypto.profit.value;
+    }, 0);
+
+    const yesterday = new Date();
+    yesterday.setDate(yesterday.getDate() - 1);
+
+    const startDate = new Date(yesterday);
+    startDate.setUTCHours(0, 0, 0, 0);
+
+    const endDate = new Date(yesterday);
+    endDate.setUTCHours(23, 59, 59, 999);
+
+    const yesterdayHistory =
+      await this.historyRepository.getHistoryByDateInterval(
+        user,
+        startDate,
+        endDate,
+      );
+
+    const yesterdayProfit = yesterdayHistory.reduce((acc, history) => {
+      return acc + history.profit;
+    }, 0);
+
+    const dailyProfit = allTimeProfit - yesterdayProfit;
+
+    return {
+      totalAmount: totalAmount,
+      allTimeProfit: allTimeProfit,
+      dailyProfit: dailyProfit,
+    };
   }
 }

@@ -68,4 +68,24 @@ export class HistoriesOfAssetsInPortfoliosRepository extends Repository<HistoryO
       throw new UnprocessableEntityException();
     }
   }
+
+  async getHistoryByDateInterval(
+    user: User,
+    startDate: Date,
+    endDate: Date,
+  ): Promise<HistoryOfAssetInPortfolio[]> {
+    const queryBuilder = this.createQueryBuilder('history');
+    queryBuilder
+      .where('history.user = :user', { user: user.id })
+      .andWhere('history.date >= :startDate', { startDate: startDate })
+      .andWhere('history.date <= :endDate', { endDate: endDate })
+      .orderBy('history.date', 'DESC');
+
+    try {
+      return await queryBuilder.getMany();
+    } catch (error) {
+      console.warn(error);
+      throw new UnprocessableEntityException(error);
+    }
+  }
 }

@@ -17,6 +17,9 @@ export function dateToCGFormat(inputDate: string | Date): string {
 }
 
 export function dateViewModel(dateString: Date): string {
-  const options = { day: "numeric", month: "short", year: "numeric" };
-  return new Date(dateString).toLocaleDateString("ru-RU", options);
+  return new Date(dateString).toLocaleDateString("ru-RU", {
+    day: "numeric",
+    month: "short",
+    year: "numeric",
+  });
 }
