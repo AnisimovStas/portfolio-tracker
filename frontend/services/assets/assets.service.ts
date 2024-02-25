@@ -4,6 +4,8 @@ import {
   useAPI,
 } from "~/services/apiWrapper/useFetchWrapper";
 import type { ACTIVE_TYPE } from "~/types/transaction.types";
+import type { IHistoryPayload } from "~/layers/Portfolio/store/Portfolio.store";
+import type { IPortfolioHistory } from "~/services/portfolio/portfolio.service";
 
 export interface IAsset {
   coinGeckoId: string | null;
@@ -64,6 +66,28 @@ export const fetchCryptoPrice = (coingeckoId: string, priceDate: string) => {
       fetch: {
         query: {
           date: priceDate,
+        },
+      },
+    },
+  );
+};
+
+export const getAssetHistory = ({ assetId, ticker, type }: IHistoryPayload) => {
+  return useAPI<IPortfolioHistory[], IPortfolioHistory[]>(
+    "asset-history",
+    `api/portfolios/history/${ticker}`,
+    {
+      baseUrl: EApiUrls.BASE,
+      type: EApiTypes.AUTH,
+    },
+    {
+      after: {
+        lazy: true,
+      },
+      fetch: {
+        query: {
+          assetId,
+          type,
         },
       },
     },

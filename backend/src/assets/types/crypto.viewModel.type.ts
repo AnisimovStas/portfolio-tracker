@@ -5,6 +5,7 @@ export interface IProfit {
   percentage: number;
 }
 export interface CryptoViewModelType {
+  id: number;
   coinGeckoId: string;
   name: string;
   ticker: string;

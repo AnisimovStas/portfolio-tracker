@@ -37,12 +37,13 @@ export interface ICrypto {
    * earnedAmountByStacking: сколько пользователь заработал на стейкинге (в монетках)
    */
   earnedAmountByStacking: number;
-
   /*
    * earnedByStacking: сколько пользователь заработал на стейкинге по текущему базовому курсу
    */
   earnedByStacking: number;
+
   icon: string;
+  id: number;
   name: string;
   /*
    * profit: Профит с учетом стэйкинга
@@ -62,7 +63,7 @@ export interface ICrypto {
 
 export const getCrypto = () => {
   return useAPI<ICrypto[], ICrypto[]>(
-    "all-cases",
+    "fetch-crypto",
     "/api/assets/crypto",
     {
       baseUrl: EApiUrls.BASE,

@@ -62,6 +62,7 @@ export function useAPI<TFinalData, TRawData = TFinalData>(
     },
   };
 
+  console.log(options?.fetch?.query);
   const getAuthHeaders = (): Headers | void => typesHeaders[apiConfig.type]();
 
   const { data, error, pending, execute } = useAsyncData(

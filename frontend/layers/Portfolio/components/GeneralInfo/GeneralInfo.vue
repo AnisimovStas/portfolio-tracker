@@ -1,32 +1,25 @@
 <template>
   <div class="general-info__container">
-    <div class="general__info">Блок с информацией о портфеле</div>
-    <div class="general__chart">График портфеля</div>
+    <p>Блок с информацией о портфеле</p>
+    <p>TODO Добавить запрос на инфу о текущем состоянии портфеля</p>
+    <p>Текущий баланс: {{ portfolioStore.totalPortfolioValue }} $</p>
   </div>
 </template>
+<script setup lang="ts">
+import { usePortfolioStore } from "~/layers/Portfolio/store/Portfolio.store";
+
+const portfolioStore = usePortfolioStore();
+</script>
+
 <style scoped>
 .general-info__container {
   display: flex;
   flex-direction: column;
-  gap: var(--gap-s);
-  width: 100%;
-}
-
-.general__info {
-  display: flex;
   align-items: center;
   justify-content: center;
   height: 90px;
   font-size: 20px;
   font-weight: 700;
-  border: 1px solid;
-}
-
-.general__chart {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 300px;
   border: 1px solid;
 }
 </style>

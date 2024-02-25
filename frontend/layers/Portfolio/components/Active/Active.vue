@@ -46,12 +46,60 @@
         class="flex flex-col bg-gray-700 p-2 gap-2 w-full z-20"
       >
         <div class="flex justify-between w-full">
-          <div class="flex border justify-center items-center w-1/3">
-            График исторической стоимости
-          </div>
-          <div class="flex border justify-center items-center w-1/3">
-            График стоимости портфеле
-          </div>
+          <ClientOnly placeholder="loading...">
+            <div class="flex border justify-center items-center w-1/3">
+              <div v-if="priceChartData && priceChartData.length > 0">
+                <Chart
+                  :data="priceChartData"
+                  :preset="PRESET.ACTIVE"
+                  :chart-color-preset="CHART_COLOR_PRESET.BLUE"
+                  :label="`${props.active.name}  в портфеле`"
+                />
+                <p>График value {{ props.active.name }} в портфеле</p>
+              </div>
+              <div v-else>
+                <p>Недостаточно данных для отображения</p>
+              </div>
+            </div>
+
+            <div class="flex border justify-center items-center w-1/3">
+              <div v-if="profitChartData && profitChartData.length > 0">
+                <Chart
+                  :data="profitChartData"
+                  :preset="PRESET.ACTIVE"
+                  :chart-color-preset="CHART_COLOR_PRESET.BLUE"
+                  :label="`Профит ${props.active.name}`"
+                />
+                <p>График профита {{ props.active.name }} в портфеле</p>
+              </div>
+              <div v-else>
+                <p>Недостаточно данных для отображения</p>
+              </div>
+            </div>
+            <div
+              v-if="isStackingChartShow"
+              class="flex border justify-center items-center w-1/3"
+            >
+              <div
+                v-if="
+                  earnedByStackingChartData &&
+                  earnedByStackingChartData.length > 0
+                "
+              >
+                <Chart
+                  v-if="earnedByStackingChartData"
+                  :data="earnedByStackingChartData"
+                  :preset="PRESET.ACTIVE"
+                  :chart-color-preset="CHART_COLOR_PRESET.BLUE"
+                  :label="`Получено от стейкинга ${props.active.name}`"
+                />
+                <p>График наград за стейкинг {{ props.active.name }}</p>
+              </div>
+              <div v-else>
+                <p>Недостаточно данных для отображения</p>
+              </div>
+            </div>
+          </ClientOnly>
           <div class="flex flex-col gap-0.5 w-1/3">
             <p>
               % от всего портфеля:
@@ -59,10 +107,7 @@
             </p>
             <p>% от {{ percentOfTotalBlock }}</p>
             <p>Находится в портфеле с: {{ active.transactions[0].date }}</p>
-            <!--            <p>Средняя цена покупки: {{ active.averagePrice }} $</p>-->
-            <!--            <p v-if="active.stackingPercentage > 0">-->
-            <!--              Процент стейкинга: {{ active.stackingPercentage }} %-->
-            <!--            </p>-->
+            <p>Средняя цена покупки: {{ active.averageBuyPrice }} $</p>
             <p v-if="active.earnedByStacking > 0">
               Получено от стейкинга: {{ active.earnedByStacking }}
             </p>
@@ -87,7 +132,17 @@
 <script setup lang="ts">
 // TODO Добавить анимацию, чтобы красиво изменялась высота контейнера
 import type { IActiveTypesProps } from "~/layers/Portfolio/components/Active/Active.types";
-import { usePortfolioStore } from "~/layers/Portfolio/store/Portfolio.store";
+import {
+  type IHistoryPayload,
+  usePortfolioStore,
+} from "~/layers/Portfolio/store/Portfolio.store";
+import { getAssetHistory } from "~/services/assets/assets.service";
+import Chart from "~/layers/Portfolio/components/Chart/Chart.vue";
+import { type IPortfolioHistory } from "~/services/portfolio/portfolio.service";
+import {
+  CHART_COLOR_PRESET,
+  PRESET,
+} from "~/layers/Portfolio/components/Chart/Chart.types";
 
 const props = defineProps<IActiveTypesProps>();
 
@@ -171,6 +226,83 @@ const percentOfTotalBlock = computed(() => {
     ) +
     "%"
   );
+});
+
+const historyPayload = computed<IHistoryPayload>(() => {
+  return {
+    assetId: props.active.id,
+    ticker: props.active.ticker,
+    type: props.blockType,
+  };
+});
+
+const historicalPrice = ref<IPortfolioHistory[]>([]);
+watch(
+  () => isOpen.value,
+  async (value) => {
+    if (value) {
+      const { data, execute: fetchHistoricalData } = getAssetHistory(
+        historyPayload.value,
+      );
+
+      await fetchHistoricalData();
+      if (!data.value) return;
+      historicalPrice.value.push(...data.value);
+    }
+
+    if (!value) {
+      historicalPrice.value = [];
+    }
+  },
+);
+
+const priceChartData = computed(() => {
+  if (!historicalPrice.value) {
+    return [];
+  }
+  return historicalPrice.value
+    .map((item) => {
+      return {
+        date: dateViewModel(item.date),
+        value: item.priceValue,
+      };
+    })
+    .reverse();
+});
+
+const profitChartData = computed(() => {
+  if (!historicalPrice.value) {
+    return [];
+  }
+  return historicalPrice.value
+    .map((item) => {
+      return {
+        date: dateViewModel(item.date),
+        value: item.profit,
+      };
+    })
+    .reverse();
+});
+
+const earnedByStackingChartData = computed(() => {
+  if (!historicalPrice.value) {
+    return [];
+  }
+  return historicalPrice.value
+    .map((item) => {
+      return {
+        date: dateViewModel(item.date),
+        value: item.earnedAmountByStacking ?? 0,
+      };
+    })
+    .reverse();
+});
+
+const isStackingChartShow = computed(() => {
+  if (earnedByStackingChartData.value.length === 0) {
+    return false;
+  }
+  return earnedByStackingChartData.value.some((item) => item.value > 0);
 });
 </script>
 <style scoped>
