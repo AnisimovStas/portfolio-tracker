@@ -40,7 +40,6 @@ export class PortfoliosService {
   }
 
   //TODO Получилось, но будто как-то пиздец, переделать логику
-  @Cron('59 23 * * *')
   async recordUsersHistories() {
     const users: User[] = await this.authService.getAllUsers();
     const result: HistoryOfAssetInPortfolio[] = [];
@@ -77,6 +76,12 @@ export class PortfoliosService {
     }
   }
 
+  @Cron('59 23 * * *')
+  async recordUsersHistoriesInterval() {
+    return await this.recordUsersHistories();
+  }
+
+  //TODO переделать, 2 раза дергаем базу, будто бы можно сделать это 1 раз
   async getGeneralInfo(user: User): Promise<GeneralInfoViewModel> {
     const cryptoViewModels = await this.assetsService.getUserCrypto(user);
 
