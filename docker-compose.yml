@@ -1,34 +1,13 @@
-version: '3'
+name: portfolio-tracker
+
+version: "3.9"
+
 services:
-  frontend:
-    build:
-      context: .
-      dockerfile: frontend/Dockerfile
+  app:
+    build: ./frontend
+    restart: unless-stopped
+    hostname: web
     ports:
       - "3000:3000"
-    volumes:
-      - ./frontend:/app
-      - /app/node_modules
-    environment:
-      - NODE_ENV=development
 
-  db:
-    image: postgres
-    restart: always
-    ports:
-      - "5433:5433"
-    environment:
-      POSTGRES_PASSWORD: postgres
 
-  backend:
-    build:
-      context: .
-      dockerfile: backend/Dockerfile
-    ports:
-      - "4000:4000"
-    volumes:
-      - ./backend/src:/app/src
-    environment:
-      - NODE_ENV=development
-    depends_on:
-      - db
