@@ -1,13 +1,54 @@
-name: portfolio-tracker
-
 version: "3.9"
 
+name: portfolio-tracker
+
+
 services:
-  app:
+  frontend:
     build: ./frontend
+    command: node .output/server/index.mjs
     restart: unless-stopped
-    hostname: web
     ports:
       - "3000:3000"
+    environment:
+      PORT: 3000
+
+  backend:
+    build: ./backend
+    command: npm run start && npm run migration:run
+    restart: unless-stopped
+    ports:
+      - "9229:9229"
+    environment:
+      PORT: 9229
+      NODE_ENV: production
+      TYPEORM_HOST: postgres_db
+      TYPEORM_USERNAME: postgres
+      TYPEORM_PASSWORD: postgres
+      TYPEORM_DATABASE: portfolio
+      TYPEORM_PORT: 5432
+      TYPEORM_MIGRATIONS_DIR: src/migrations
+      TYPEORM_MIGRATIONS_RUN: true
+      TYPEORM_MIGRATIONS_TABLE_NAME: migrations
+    depends_on:
+      - postgres_db
+
+  postgres_db:
+    image: postgres:latest
+    volumes:
+      - postgres_db:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: ${TYPEORM_USERNAME}
+      POSTGRES_PASSWORD: ${TYPEORM_PASSWORD}
+      POSTGRES_DB: ${TYPEORM_DATABASE}
+    expose:
+      - ${TYPEORM_PORT}
+    ports:
+      - ${TYPEORM_PORT}:${TYPEORM_PORT}
+    command: -p ${TYPEORM_PORT}
+
+volumes:
+  postgres_db:
+
 
 

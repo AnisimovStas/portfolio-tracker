@@ -22,6 +22,7 @@ import { PortfoliosModule } from './portfolios/portfolios.module';
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => {
+        console.log(configService.get('database'));
         return {
           ...configService.get('database'),
         };
