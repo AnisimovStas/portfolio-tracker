@@ -13,9 +13,6 @@ RUN npm install
 # Copy application files
 COPY . .
 
-# Run build
-RUN npm run build
-
 ## Expose Nuxt port
 #EXPOSE 3000
 #
