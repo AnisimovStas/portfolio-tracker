@@ -15,7 +15,7 @@ services:
 
   backend:
     build: ./backend
-    command: sh -c "npm run start && npm run migration:run"
+    command: sh -c "npm run build && npm run start && npm run migration:run"
     restart: unless-stopped
     ports:
       - "9229:9229"
