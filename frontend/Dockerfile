@@ -5,7 +5,7 @@ FROM node:21-alpine3.18
 WORKDIR /user/src/frontend
 
 # Copy application files
-COPY package*json  ./
+COPY package.json  ./
 
 # Install build dependencies
 RUN npm install
