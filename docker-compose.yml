@@ -30,6 +30,7 @@ services:
       TYPEORM_MIGRATIONS_DIR: src/migrations
       TYPEORM_MIGRATIONS_RUN: true
       TYPEORM_MIGRATIONS_TABLE_NAME: migrations
+      FRONTEND_BASE_URL: http://my-domain-for-portfolio.com
     depends_on:
       - postgres_db
 

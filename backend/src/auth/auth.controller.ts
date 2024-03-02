@@ -5,10 +5,14 @@ import { AuthGuard } from '@nestjs/passport';
 import { UserGoogleDetailsDto } from './dto/user-google-details.dto';
 import { GetUser } from './utils/get-user.decorator';
 import { User } from './user.entity';
+import { ConfigService } from '@nestjs/config';
 
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+  constructor(
+    private readonly authService: AuthService,
+    private readonly configService: ConfigService,
+  ) {}
 
   @UseGuards(AuthGuard('google'))
   @Get('google/login')
@@ -23,7 +27,9 @@ export class AuthController {
     const jwt = await this.authService.loginOrRegister(user);
 
     response.cookie('authorization', jwt.access_token);
-    return response.redirect('http://localhost:3000/profile');
+    return response.redirect(
+      `${this.configService.get('FRONTEND_BASE_URL')}/profile`,
+    );
   }
 
   @UseGuards(AuthGuard('jwt'))
