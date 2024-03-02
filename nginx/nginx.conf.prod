@@ -6,4 +6,8 @@ server {
     location / {
        proxy_pass http://frontend:3000;
     }
+
+    location /api {
+        proxy_pass http://backend:9229;
+    }
 }

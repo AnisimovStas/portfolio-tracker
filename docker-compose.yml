@@ -12,13 +12,14 @@ services:
 #      - "3000:3000"
     environment:
       PORT: 3000
+      BACKEND_BASE_URL: http://my-domain-for-portfolio.com
 
   backend:
     build: ./backend
     command: sh -c "npm run build && npm run start && npm run migration:run"
     restart: unless-stopped
-    ports:
-      - "9229:9229"
+#    ports:
+#      - "9229:9229"
     environment:
       PORT: 9229
       NODE_ENV: production
@@ -57,6 +58,9 @@ services:
       - ./nginx/nginx.conf.prod:/etc/nginx/conf.d/nginx.conf
     depends_on:
       - frontend
+      - backend
+
+
 volumes:
   postgres_db:
 
