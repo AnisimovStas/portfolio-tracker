@@ -32,6 +32,9 @@ services:
       TYPEORM_MIGRATIONS_RUN: true
       TYPEORM_MIGRATIONS_TABLE_NAME: migrations
       FRONTEND_BASE_URL: http://my-domain-for-portfolio.com
+      CLIENT_ID: 525898649995-epsvkq17tdatpjdd504bg8iii8a1rml2.apps.googleusercontent.com
+      CLIENT_SECRET: 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
+      JWT_SECRET: SUPER_STAS_123
     depends_on:
       - postgres_db
 

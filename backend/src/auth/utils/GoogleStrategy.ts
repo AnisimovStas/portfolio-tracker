@@ -9,12 +9,11 @@ import { ConfigService } from '@nestjs/config';
 export class GoogleStrategy extends PassportStrategy(Strategy) {
   constructor(
     private readonly authService: AuthService,
-    private readonly configService: ConfigService,
+    configService: ConfigService,
   ) {
     super({
-      clientID:
-        '525898649995-epsvkq17tdatpjdd504bg8iii8a1rml2.apps.googleusercontent.com',
-      clientSecret: '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',
+      clientID: configService.get('CLIENT_ID'),
+      clientSecret: configService.get('CLIENT_SECRET'),
       callbackURL: `${configService.get(
         'FRONTEND_BASE_URL',
       )}/api/auth/google/redirect`,
