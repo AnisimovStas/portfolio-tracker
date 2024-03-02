@@ -8,8 +8,8 @@ services:
     build: ./frontend
     command: sh -c "npm run build && node .output/server/index.mjs"
     restart: unless-stopped
-    ports:
-      - "3000:3000"
+#    ports:
+#      - "3000:3000"
     environment:
       PORT: 3000
 
@@ -47,6 +47,15 @@ services:
       - ${TYPEORM_PORT}:${TYPEORM_PORT}
     command: -p ${TYPEORM_PORT}
 
+  nginx:
+    image: nginx:stable-alpine
+    container_name: portfolio-tracker-nginx
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx/nginx.conf.prod:/etc/nginx/conf.d/nginx.conf
+    depends_on:
+      - frontend
 volumes:
   postgres_db:
 
