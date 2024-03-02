@@ -12,7 +12,7 @@ services:
 #      - "3000:3000"
     environment:
       PORT: 3000
-      BACKEND_BASE_URL: http://my-domain-for-portfolio.com
+      BACKEND_BASE_URL: ${FRONTEND_BASE_URL}
 
   backend:
     build: ./backend
@@ -24,17 +24,17 @@ services:
       PORT: 9229
       NODE_ENV: production
       TYPEORM_HOST: postgres_db
-      TYPEORM_USERNAME: postgres
-      TYPEORM_PASSWORD: postgres
-      TYPEORM_DATABASE: portfolio
-      TYPEORM_PORT: 5432
-      TYPEORM_MIGRATIONS_DIR: src/migrations
-      TYPEORM_MIGRATIONS_RUN: true
-      TYPEORM_MIGRATIONS_TABLE_NAME: migrations
-      FRONTEND_BASE_URL: http://my-domain-for-portfolio.com
-      CLIENT_ID: 525898649995-epsvkq17tdatpjdd504bg8iii8a1rml2.apps.googleusercontent.com
-      CLIENT_SECRET: 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
-      JWT_SECRET: SUPER_STAS_123
+      TYPEORM_USERNAME: ${TYPEORM_USERNAME}
+      TYPEORM_PASSWORD: ${TYPEORM_PASSWORD}
+      TYPEORM_DATABASE: ${TYPEORM_DATABASE}
+      TYPEORM_PORT: ${TYPEORM_PORT}
+      TYPEORM_MIGRATIONS_DIR: ${TYPEORM_MIGRATIONS_DIR}
+      TYPEORM_MIGRATIONS_RUN: ${TYPEORM_MIGRATIONS_RUN}
+      TYPEORM_MIGRATIONS_TABLE_NAME: ${TYPEORM_MIGRATIONS_TABLE_NAME}
+      FRONTEND_BASE_URL: ${FRONTEND_BASE_URL}
+      CLIENT_ID: ${CLIENT_ID}
+      CLIENT_SECRET: ${CLIENT_SECRET}
+      JWT_SECRET: ${JWT_SECRET}
     depends_on:
       - postgres_db
 
