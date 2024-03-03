@@ -1,28 +1,28 @@
 version: '3'
 services:
-#  main:
-#    container_name: main
-#    build:
-#      context: .
-#    volumes:
-#      - .:/usr/src/app
-#      - /usr/src/app/node_modules
-#    ports:
-#      - "9229:9229"
-#    command: npm run start:dev
-#    env_file:
-#      - .env
-#    depends_on:
-#      - postgres
+  #  main:
+  #    container_name: main
+  #    build:
+  #      context: .
+  #    volumes:
+  #      - .:/usr/src/app
+  #      - /usr/src/app/node_modules
+  #    ports:
+  #      - "9229:9229"
+  #    command: npm run start:dev
+  #    env_file:
+  #      - .env
+  #    depends_on:
+  #      - postgres
 
   postgres:
     image: postgres:latest
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: postgres
+      POSTGRES_USER: ${TYPEORM_USERNAME}
+      POSTGRES_PASSWORD: ${TYPEORM_PASSWORD}
+      POSTGRES_DB: ${TYPEORM_DATABASE}
     expose:
-      - "5433"
+      - ${TYPEORM_PORT}
     ports:
-      - "5433:5433"
-    command: -p 5433
+      - ${TYPEORM_PORT}:${TYPEORM_PORT}
+    command: -p ${TYPEORM_PORT}

@@ -1,34 +1,71 @@
-version: '3'
+version: "3.9"
+
+name: portfolio-tracker
+
+
 services:
   frontend:
-    build:
-      context: .
-      dockerfile: frontend/Dockerfile
-    ports:
-      - "3000:3000"
-    volumes:
-      - ./frontend:/app
-      - /app/node_modules
+    build: ./frontend
+    command: sh -c "npm run build && node .output/server/index.mjs"
+    restart: unless-stopped
+#    ports:
+#      - "3000:3000"
     environment:
-      - NODE_ENV=development
-
-  db:
-    image: postgres
-    restart: always
-    ports:
-      - "5433:5433"
-    environment:
-      POSTGRES_PASSWORD: postgres
+      PORT: 3000
+      BACKEND_BASE_URL: ${FRONTEND_BASE_URL}
 
   backend:
-    build:
-      context: .
-      dockerfile: backend/Dockerfile
-    ports:
-      - "4000:4000"
-    volumes:
-      - ./backend/src:/app/src
+    build: ./backend
+    command: sh -c "npm run build && npm run start && npm run migration:run"
+    restart: unless-stopped
+#    ports:
+#      - "9229:9229"
     environment:
-      - NODE_ENV=development
+      PORT: 9229
+      NODE_ENV: production
+      TYPEORM_HOST: postgres_db
+      TYPEORM_USERNAME: ${TYPEORM_USERNAME}
+      TYPEORM_PASSWORD: ${TYPEORM_PASSWORD}
+      TYPEORM_DATABASE: ${TYPEORM_DATABASE}
+      TYPEORM_PORT: ${TYPEORM_PORT}
+      TYPEORM_MIGRATIONS_DIR: ${TYPEORM_MIGRATIONS_DIR}
+      TYPEORM_MIGRATIONS_RUN: ${TYPEORM_MIGRATIONS_RUN}
+      TYPEORM_MIGRATIONS_TABLE_NAME: ${TYPEORM_MIGRATIONS_TABLE_NAME}
+      FRONTEND_BASE_URL: ${FRONTEND_BASE_URL}
+      CLIENT_ID: ${CLIENT_ID}
+      CLIENT_SECRET: ${CLIENT_SECRET}
+      JWT_SECRET: ${JWT_SECRET}
     depends_on:
-      - db
+      - postgres_db
+
+  postgres_db:
+    image: postgres:latest
+    volumes:
+      - postgres_db:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: ${TYPEORM_USERNAME}
+      POSTGRES_PASSWORD: ${TYPEORM_PASSWORD}
+      POSTGRES_DB: ${TYPEORM_DATABASE}
+    expose:
+      - ${TYPEORM_PORT}
+    ports:
+      - ${TYPEORM_PORT}:${TYPEORM_PORT}
+    command: -p ${TYPEORM_PORT}
+
+  nginx:
+    image: nginx:stable-alpine
+    container_name: portfolio-tracker-nginx
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx/nginx.conf.prod:/etc/nginx/conf.d/nginx.conf
+    depends_on:
+      - frontend
+      - backend
+
+
+volumes:
+  postgres_db:
+
+
+

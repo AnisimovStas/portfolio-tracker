@@ -1,49 +1,43 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
-import { UsersModule } from './users/users.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { PortfoliosModule } from './portfolios/portfolios.module';
-import { CurrenciesModule } from './currencies/currencies.module';
 import { ImageService } from './image/image.service';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
 import { AuthModule } from './auth/auth.module';
 import { ScheduleModule } from '@nestjs/schedule';
-import { RuStocksModule } from './ru-stocks/ru-stocks.module';
-import { ConfigModule } from '@nestjs/config';
-import { CryptotxModule } from './cryptotx/cryptotx.module';
-import { CryptoRowModule } from './crypto-row/crypto-row.module';
-import { SearchModule } from './search/search.module';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import { TransactionsModule } from './transactions/transactions.module';
+import { AssetsModule } from './assets/assets.module';
+import { AppConfig, DatabaseConfig } from './config';
+import { PortfoliosModule } from './portfolios/portfolios.module';
 
 @Module({
   imports: [
-    ConfigModule.forRoot(),
-    TypeOrmModule.forRoot({
-      type: 'postgres',
-      host: '127.0.0.1',
-      port: 5433,
-      username: 'postgres',
-      password: 'postgres',
-      database: 'postgres',
-      autoLoadEntities: true,
-      synchronize: true,
+    ConfigModule.forRoot({
+      isGlobal: true,
+      cache: true,
+      load: [AppConfig, DatabaseConfig],
     }),
-    UsersModule,
-    PortfoliosModule,
-    CurrenciesModule,
+    TypeOrmModule.forRootAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) => {
+        return {
+          ...configService.get('database'),
+        };
+      },
+    }),
     ServeStaticModule.forRoot({
-      rootPath: join(__dirname, '..', 'src', 'assets'),
-      serveRoot: '/assets',
+      rootPath: join(__dirname, '..', 'src', 'img'),
+      serveRoot: '/img',
     }),
     AuthModule,
+    PortfoliosModule,
     ScheduleModule.forRoot(),
-    RuStocksModule,
-    CryptotxModule,
-    CryptoRowModule,
-    SearchModule,
+    TransactionsModule,
+    AssetsModule,
   ],
-  controllers: [AppController],
-  providers: [AppService, ImageService],
+  controllers: [],
+  providers: [ImageService],
 })
 export class AppModule {}

@@ -1,15 +1,20 @@
-# Используйте Node.js в качестве базового образа
-FROM node:20-alpine
+# Specify base image
+FROM node:21-alpine3.18
 
-# Установите рабочую директорию
-WORKDIR /app
+# Specify working directory
+WORKDIR /user/src/frontend
 
-# Установите зависимости для Nuxt.js
-COPY ./package*.json ./
+# Copy application files
+COPY package.json  ./
+
+# Install build dependencies
 RUN npm install
 
-# Скопируйте все файлы из frontend директории в контейнер
-COPY ./ .
+# Copy application files
+COPY . .
 
-# Запустите Nuxt.js приложение в development режиме
-CMD ["npm", "run", "dev"]
+## Expose Nuxt port
+#EXPOSE 3000
+#
+## Specify image command
+#CMD ["node", ".output/server/index.mjs"]

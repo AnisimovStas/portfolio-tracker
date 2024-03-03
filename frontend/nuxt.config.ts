@@ -14,8 +14,13 @@ export default defineNuxtConfig({
     devProxy: {
       "/api": {
         changeOrigin: true,
-        target: "http://localhost:9229/api",
+        target: `${process.env.BACKEND_BASE_URL}/api`,
       },
+    },
+  },
+  runtimeConfig: {
+    public: {
+      backendBaseUrl: process.env.BACKEND_BASE_URL,
     },
   },
   stylelint: {

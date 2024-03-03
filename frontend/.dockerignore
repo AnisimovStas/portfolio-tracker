@@ -1,7 +1,8 @@
 .idea
 .git
-.nuxt
 dist
 .output
-node_modules
+.nuxt/
+dist/
+node_modules/
 .env

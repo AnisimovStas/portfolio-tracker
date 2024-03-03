@@ -1,15 +1,17 @@
 import { Injectable } from '@nestjs/common';
-import { UserDetailsDto } from './dto/UserDetails.dto';
 import { InjectRepository } from '@nestjs/typeorm';
-import { User } from '../users/entities/user.entity';
-import { Repository } from 'typeorm';
 import { JwtService } from '@nestjs/jwt';
+import { UserGoogleDetailsDto } from './dto/user-google-details.dto';
+import { UsersRepository } from './users.repository';
+import { JwtPayload } from './types/jwt-payload.type';
+import { User } from './user.entity';
 
 @Injectable()
 export class AuthService {
   constructor(
     private readonly jwtService: JwtService,
-    @InjectRepository(User) private readonly usersRepository: Repository<User>,
+    @InjectRepository(UsersRepository)
+    private readonly usersRepository: UsersRepository,
   ) {}
 
   async findUser(id: string) {
@@ -17,38 +19,22 @@ export class AuthService {
     return user;
   }
 
-  async login(user: any) {
-    if (user) {
-      const userInDB = await this.usersRepository.findOneBy({
-        email: user.emails[0].value,
-      });
+  async loginOrRegister(
+    userDto: UserGoogleDetailsDto,
+  ): Promise<{ access_token: string }> {
+    const email = userDto.emails[0].value;
+    await this.usersRepository.findOrCreateUser(userDto);
 
-      const details: UserDetailsDto = {
-        email: user.emails[0].value,
-        displayName: user.displayName,
-      };
+    const payload: JwtPayload = { email };
+    const accessToken = this.jwtService.sign(payload);
 
-      const tokenPayload = {
-        id: user.id,
-        email: user.emails[0].value,
-        displayName: user.displayName,
-      };
-      if (userInDB) {
-        const updatedUser = this.usersRepository.merge(userInDB, details);
-        await this.usersRepository.save(updatedUser);
-        tokenPayload.id = userInDB.id;
-      }
-      if (!userInDB) {
-        const newUser = this.usersRepository.create(details);
-        await this.usersRepository.save(newUser);
-        tokenPayload.id = newUser.id;
-      }
+    return { access_token: accessToken };
+  }
 
-      return {
-        access_token: this.jwtService.sign(tokenPayload),
-      };
-    } else {
-      return { access_token: null };
-    }
+  async getAllUsers(): Promise<User[]> {
+    const users = await this.usersRepository.find({
+      relations: ['transactions.asset'],
+    });
+    return users;
   }
 }

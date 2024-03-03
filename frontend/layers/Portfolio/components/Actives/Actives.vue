@@ -14,10 +14,10 @@
       Блок с криптовалютами
 
       <Active
-        v-for="crypto in portfolioStore.data?.crypto"
-        :key="crypto.id"
+        v-for="crypto in portfolioStore.cryptos"
+        :key="crypto.coinGeckoId"
         :total-block-value="portfolioStore.totalCryptoValue"
-        :block-type="'crypto'"
+        :block-type="ACTIVE_TYPE.CRYPTO"
         :active="crypto"
       />
     </div>
@@ -30,6 +30,8 @@
 // TODO Зафиксить ошибки в консоли
 import { usePortfolioStore } from "~/layers/Portfolio/store/Portfolio.store";
 import Active from "~/layers/Portfolio/components/Active/Active.vue";
+import { ACTIVE_TYPE } from "~/types/transaction.types";
+import type { ICrypto } from "~/services/crypto/crypto.service";
 
 const portfolioStore = usePortfolioStore();
 </script>

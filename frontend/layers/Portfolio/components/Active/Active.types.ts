@@ -1,8 +1,8 @@
-import type { IPortfolioCryptoRow } from "~/layers/Portfolio/store/Portfolio.store";
+import type { ICrypto } from "~/services/crypto/crypto.service";
+import { ACTIVE_TYPE } from "~/types/transaction.types";
 
-export type TBlockType = "crypto" | "stock";
 export interface IActiveTypesProps {
-  active: IPortfolioCryptoRow;
-  blockType: TBlockType;
+  active: ICrypto;
+  blockType: ACTIVE_TYPE;
   totalBlockValue: number;
 }
