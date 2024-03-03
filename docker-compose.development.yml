@@ -1,0 +1,17 @@
+version: '3'
+
+services:
+  backend:
+    command: npm run start:dev
+    volumes:
+      - ./backend/src:/user/src/backend/src
+    environment:
+      NODE_ENV: development
+
+  frontend:
+    command: sh -c "npm i && npm run dev"
+    volumes:
+      - ./frontend:/user/src/frontend
+      - /frontend/node_modules
+    environment:
+      NODE_ENV: development

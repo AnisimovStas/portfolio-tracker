@@ -7,7 +7,7 @@
           src="SvgoAuthGoogleIcon"
           size="sm"
           @click="
-            navigateTo('http://localhost:9229/api/auth/google/login', {
+            navigateTo(`${baseConfigUrl}/api/auth/google/login`, {
               external: true,
             })
           "
@@ -26,6 +26,9 @@
 </template>
 <script setup lang="ts">
 import { useAuthStore } from "~/store/auth.store";
+
+const config = useRuntimeConfig();
+const baseConfigUrl = config.public.backendBaseUrl;
 
 const authStore = useAuthStore();
 </script>
